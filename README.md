@@ -60,6 +60,17 @@ Thinks outside of the scope of the MVP that would add value.
 * [ ] Allow for hot-reloading of the plan definition
 * [ ] Execute SQL against database to check the result (Check)
 
+## Libraries
+
+* [go-prompt](https://github.com/c-bata/go-prompt)  
+Make the shell interactive (Works with Powershell/Command Prompt)
+* [survey](https://github.com/AlecAivazis/survey)  
+Allow for user input (Works with Powershell/Command Prompt)
+* [tview](https://github.com/rivo/tview)  
+Alternative to *survey* (Works with Powershell/Command Prompt)
+* [termui](https://github.com/gizak/termui)  
+Charts, lists and other widgets (Works with Powershell/Command Prompt but doesn't look to good)
+
 ## Build
 
 The tool [goversioninfo](https://github.com/josephspurrier/goversioninfo) has to be installed in order to be able to build this project.
