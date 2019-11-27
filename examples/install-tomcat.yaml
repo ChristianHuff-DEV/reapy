@@ -1,0 +1,12 @@
+Variables:
+  workdir: "/test/path"
+Plan:
+  Name: Install Tomcat as a Windows service
+  Tasks:
+    Name: Download and unzip release file
+    Steps:
+    - Type: DownloadStep
+      Description: Download the release .zip file
+      Preferences:
+        DownloadUrl: "https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.29/bin/apache-tomcat-9.0.29.zip"
+        DownloadLocation: "${workdir}"
