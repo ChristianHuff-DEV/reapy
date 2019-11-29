@@ -22,10 +22,8 @@ To break the process down we distinguish the following building blocks:
 The overaching goal we want to achieve. (i.e. installing a piece of software). Each plan consists out of one ore more tasks.
 * Task  
 Each plan consists out of multiple tasks. A task could be the update of a database and checking that the update was successful. Each task therefore consists out of one or more steps and checks.
-* Step  
-A small piece of work contributing to the fulfillment of a task. (i.e. unzipping a file or copying a folder from one place to another)
-* Check  
-A check makes sure that a step/task has been executed successfully. (i.e. having the user manually confirm something or checking that a log file contains no errors)
+* Step
+A small piece of work contributing to the fulfillment of a task or a check to ensure that a previous step was executed successfull. (i.e. unzipping a file or copying a folder from one place to another) (i.e. having the user manually confirm something or checking that a log file contains no errors)
 
 ### MVP
 
@@ -44,9 +42,6 @@ The following gives an overview of the bare minimum that needs to work in order 
 This should work interactively (ask the user what to fill in)
 * [ ] Stop service
 * [ ] Start service
-
-#### Checks
-
 * [ ] Ask user a question (Yes/No)
 * [ ] Check that a file/folder is present
 * [ ] Define which steps to repeat if a check was unsuccessfull
