@@ -26,6 +26,12 @@ func main() {
 		log.Printf("%s:%s", key, value)
 	}
 
+	// Print extracted plans
+	log.Print("Defined plans")
+	for key, value := range config.plans {
+		log.Printf("%d:%s", key, value.name)
+	}
+
 }
 
 func readPlanDefinition() Config {
@@ -46,21 +52,40 @@ func extractConfig(configYaml []byte) (config Config) {
 	return parseConfig(configMap)
 }
 
-func parseConfig(configMap map[string]interface{}) (config Config) {
+func parseConfig(configYaml map[string]interface{}) (config Config) {
 	// Variables
-	config.variables = parseVariables(configMap["Variables"].(map[string]interface{}))
-	//
+	config.variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
+	// Plans
+	config.plans = parsePlans(configYaml["Plans"].([]interface{}))
 
 	return
 }
 
-func parseVariables(variablesMap map[string]interface{}) (variables map[string]string) {
+func parseVariables(variablesYaml map[string]interface{}) (variables map[string]string) {
 	variables = make(map[string]string)
 
 	// Iterate all variables
-	for key, value := range variablesMap {
+	for key, value := range variablesYaml {
 		variables[key] = value.(string)
 	}
 
 	return variables
+}
+
+func parsePlans(plansYaml []interface{}) (plans []Plan) {
+
+	// Iterate plans
+	for _, planYaml := range plansYaml {
+		var plan Plan
+
+		planYaml := planYaml.(map[string]interface{})
+
+		if name, ok := planYaml["Name"].(string); ok {
+			plan.name = name
+		}
+
+		plans = append(plans, plan)
+	}
+
+	return plans
 }
