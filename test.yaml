@@ -3,10 +3,15 @@ Variables:
 Plans:
   - Name: Install Tomcat as a Windows service
     Tasks:
-    - Name: Download and unzip release file
+    - Name: Download release file
       Steps:
-      - Type: DownloadStep
+      - Kind: DownloadStep
         Description: Download the release .zip file
+        Preferences:
+          DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
+          DownloadLocation: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"
+      - Kind: UnzipStep
+        Description: Unzip the release .zip file
         Preferences:
           DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
           DownloadLocation: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"
@@ -14,7 +19,7 @@ Plans:
     Tasks:
     - Name: Download and unzip update file
       Steps:
-      - Type: DownloadStep
+      - Kind: DownloadStep
         Description: Download the release .zip file
         Preferences:
           DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip

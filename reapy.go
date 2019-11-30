@@ -13,7 +13,17 @@ type Config struct {
 }
 
 type Plan struct {
-	name string
+	name  string
+	tasks []Task
+}
+
+type Task struct {
+	name  string
+	steps []Step
+}
+
+type Step struct {
+	kind string
 }
 
 func main() {
@@ -21,15 +31,21 @@ func main() {
 	config := readPlanDefinition()
 
 	// Print extracted variables
-	log.Print("Defined Variables:")
 	for key, value := range config.variables {
-		log.Printf("%s:%s", key, value)
+		log.Printf("Variable: %s:%s", key, value)
 	}
 
 	// Print extracted plans
-	log.Print("Defined plans")
 	for key, value := range config.plans {
-		log.Printf("%d:%s", key, value.name)
+		log.Printf("Plan: %d:%s", key, value.name)
+		// Print tasks of plan
+		for key, value := range value.tasks {
+			log.Printf("Task: %d:%s", key, value.name)
+			//Print steps of a task
+			for key, value := range value.steps {
+				log.Printf("Step: %d:%s", key, value.kind)
+			}
+		}
 	}
 
 }
@@ -73,7 +89,6 @@ func parseVariables(variablesYaml map[string]interface{}) (variables map[string]
 }
 
 func parsePlans(plansYaml []interface{}) (plans []Plan) {
-
 	// Iterate plans
 	for _, planYaml := range plansYaml {
 		var plan Plan
@@ -84,8 +99,45 @@ func parsePlans(plansYaml []interface{}) (plans []Plan) {
 			plan.name = name
 		}
 
+		// Parse the tasks belonging to this plan
+		plan.tasks = parseTasks(planYaml["Tasks"].([]interface{}))
+
 		plans = append(plans, plan)
 	}
 
 	return plans
+}
+
+func parseTasks(tasksYaml []interface{}) (tasks []Task) {
+	//Iterate tasks
+	for _, taskYaml := range tasksYaml {
+		var task Task
+
+		taskYaml := taskYaml.(map[string](interface{}))
+
+		if name, ok := taskYaml["Name"].(string); ok {
+			task.name = name
+		}
+
+		task.steps = parseSteps(taskYaml["Steps"].([]interface{}))
+
+		tasks = append(tasks, task)
+	}
+	return tasks
+}
+
+func parseSteps(stepsYaml []interface{}) (steps []Step) {
+	//Iterate tasks
+	for _, stepYaml := range stepsYaml {
+		var step Step
+
+		stepYaml := stepYaml.(map[string](interface{}))
+
+		if kind, ok := stepYaml["Kind"].(string); ok {
+			step.kind = kind
+		}
+
+		steps = append(steps, step)
+	}
+	return steps
 }
