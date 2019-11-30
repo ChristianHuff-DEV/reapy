@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
+	stepDefinition "github.com/ChristianHuff-DEV/reapy/step"
 	"gopkg.in/yaml.v3"
 )
 
@@ -77,15 +78,24 @@ func parseTasks(tasksYaml []interface{}) (tasks []model.Task) {
 func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 	//Iterate tasks
 	for _, stepYaml := range stepsYaml {
-		var step model.Step
 
 		stepYaml := stepYaml.(map[string](interface{}))
 
 		if kind, ok := stepYaml["Kind"].(string); ok {
-			step.Kind = kind
+			switch kind {
+			case "Download":
+				step := stepDefinition.Download{}
+				step.Kind = kind
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.DownloadURL = preferencesYaml["DownloadURL"].(string)
+				step.DownloadPath = preferencesYaml["DownloadPath"].(string)
+				steps = append(steps, step)
+			case "Unzip":
+				step := stepDefinition.Unzip{}
+				step.Kind = kind
+				steps = append(steps, step)
+			}
 		}
-
-		steps = append(steps, step)
 	}
 	return steps
 }

@@ -1,5 +1,12 @@
 package model
 
-type Step struct {
-	Kind string
+type Step interface {
+	GetKind() string
+	GetDescription() string
+	Execute()
+}
+
+type RunnableStep struct {
+	Kind        string
+	Description string
 }

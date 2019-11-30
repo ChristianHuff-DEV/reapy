@@ -5,21 +5,13 @@ Plans:
     Tasks:
     - Name: Download release file
       Steps:
-      - Kind: DownloadStep
+      - Kind: Download
         Description: Download the release .zip file
         Preferences:
-          DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
-          DownloadLocation: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"
-      - Kind: UnzipStep
+          DownloadURL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
+          DownloadPath: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"
+      - Kind: Unzip
         Description: Unzip the release .zip file
         Preferences:
-          DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
-          DownloadLocation: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"
-  - Name: Update Tomcat
-    Tasks:
-    - Name: Download and unzip update file
-      Steps:
-      - Kind: DownloadStep
-        Description: Download the release .zip file
-        Preferences:
-          DownloadUrl: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
+          DownloadURL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
+          DownloadPath: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\test"

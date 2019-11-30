@@ -5,14 +5,22 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/ChristianHuff-DEV/reapy/config"
+	c "github.com/ChristianHuff-DEV/reapy/config"
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
 
+var config model.Config
+
 func main() {
 	log.Print("Welcome to reapy")
-	config := readPlanDefinition()
 
+	for _, plan := range config.Plans {
+		c.Execute(plan)
+	}
+}
+
+func init() {
+	config = readPlanDefinition()
 	// Print extracted variables
 	for key, value := range config.Variables {
 		log.Printf("Variable: %s:%s", key, value)
@@ -26,11 +34,10 @@ func main() {
 			log.Printf("Task: %d:%s", key, value.Name)
 			//Print steps of a task
 			for key, value := range value.Steps {
-				log.Printf("Step: %d:%s", key, value.Kind)
+				log.Printf("Step: %d:%s", key, value.GetKind())
 			}
 		}
 	}
-
 }
 
 func readPlanDefinition() model.Config {
@@ -39,5 +46,5 @@ func readPlanDefinition() model.Config {
 	if err != nil {
 		log.Panic(err)
 	}
-	return config.Extract(planDefinition)
+	return c.Extract(planDefinition)
 }
