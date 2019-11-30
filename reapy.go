@@ -5,52 +5,35 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
+
+	"github.com/ChristianHuff-DEV/reapy/model"
 )
-
-type Config struct {
-	variables map[string]string
-	plans     []Plan
-}
-
-type Plan struct {
-	name  string
-	tasks []Task
-}
-
-type Task struct {
-	name  string
-	steps []Step
-}
-
-type Step struct {
-	kind string
-}
 
 func main() {
 	log.Print("Welcome to reapy")
 	config := readPlanDefinition()
 
 	// Print extracted variables
-	for key, value := range config.variables {
+	for key, value := range config.Variables {
 		log.Printf("Variable: %s:%s", key, value)
 	}
 
 	// Print extracted plans
-	for key, value := range config.plans {
-		log.Printf("Plan: %d:%s", key, value.name)
+	for key, value := range config.Plans {
+		log.Printf("Plan: %d:%s", key, value.Name)
 		// Print tasks of plan
-		for key, value := range value.tasks {
-			log.Printf("Task: %d:%s", key, value.name)
+		for key, value := range value.Tasks {
+			log.Printf("Task: %d:%s", key, value.Name)
 			//Print steps of a task
-			for key, value := range value.steps {
-				log.Printf("Step: %d:%s", key, value.kind)
+			for key, value := range value.Steps {
+				log.Printf("Step: %d:%s", key, value.Kind)
 			}
 		}
 	}
 
 }
 
-func readPlanDefinition() Config {
+func readPlanDefinition() model.Config {
 	// Read the plans from the plans.json file
 	planDefinition, err := ioutil.ReadFile("test.yaml")
 	if err != nil {
@@ -59,7 +42,7 @@ func readPlanDefinition() Config {
 	return extractConfig(planDefinition)
 }
 
-func extractConfig(configYaml []byte) (config Config) {
+func extractConfig(configYaml []byte) (config model.Config) {
 	var configMap map[string]interface{}
 
 	if err := yaml.Unmarshal(configYaml, &configMap); err != nil {
@@ -68,11 +51,11 @@ func extractConfig(configYaml []byte) (config Config) {
 	return parseConfig(configMap)
 }
 
-func parseConfig(configYaml map[string]interface{}) (config Config) {
+func parseConfig(configYaml map[string]interface{}) (config model.Config) {
 	// Variables
-	config.variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
+	config.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
 	// Plans
-	config.plans = parsePlans(configYaml["Plans"].([]interface{}))
+	config.Plans = parsePlans(configYaml["Plans"].([]interface{}))
 
 	return
 }
@@ -88,19 +71,19 @@ func parseVariables(variablesYaml map[string]interface{}) (variables map[string]
 	return variables
 }
 
-func parsePlans(plansYaml []interface{}) (plans []Plan) {
+func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
 	// Iterate plans
 	for _, planYaml := range plansYaml {
-		var plan Plan
+		var plan model.Plan
 
 		planYaml := planYaml.(map[string]interface{})
 
 		if name, ok := planYaml["Name"].(string); ok {
-			plan.name = name
+			plan.Name = name
 		}
 
 		// Parse the tasks belonging to this plan
-		plan.tasks = parseTasks(planYaml["Tasks"].([]interface{}))
+		plan.Tasks = parseTasks(planYaml["Tasks"].([]interface{}))
 
 		plans = append(plans, plan)
 	}
@@ -108,33 +91,33 @@ func parsePlans(plansYaml []interface{}) (plans []Plan) {
 	return plans
 }
 
-func parseTasks(tasksYaml []interface{}) (tasks []Task) {
+func parseTasks(tasksYaml []interface{}) (tasks []model.Task) {
 	//Iterate tasks
 	for _, taskYaml := range tasksYaml {
-		var task Task
+		var task model.Task
 
 		taskYaml := taskYaml.(map[string](interface{}))
 
 		if name, ok := taskYaml["Name"].(string); ok {
-			task.name = name
+			task.Name = name
 		}
 
-		task.steps = parseSteps(taskYaml["Steps"].([]interface{}))
+		task.Steps = parseSteps(taskYaml["Steps"].([]interface{}))
 
 		tasks = append(tasks, task)
 	}
 	return tasks
 }
 
-func parseSteps(stepsYaml []interface{}) (steps []Step) {
+func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 	//Iterate tasks
 	for _, stepYaml := range stepsYaml {
-		var step Step
+		var step model.Step
 
 		stepYaml := stepYaml.(map[string](interface{}))
 
 		if kind, ok := stepYaml["Kind"].(string); ok {
-			step.kind = kind
+			step.Kind = kind
 		}
 
 		steps = append(steps, step)
