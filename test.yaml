@@ -5,6 +5,13 @@ Plans:
     Tasks:
     - Name: Download release file
       Steps:
+      - Kind: Command
+        Description: Echo "Hello World"
+        Preferences:
+          Command: "cmd /c echo"
+          Args:
+          - Hello
+          - World
       - Kind: Delete
         Description: Clean up the workdir
         Preferences:
