@@ -5,6 +5,14 @@ Plans:
     Tasks:
     - Name: Download release file
       Steps:
+      - Kind: Delete
+        Description: Clean up the workdir
+        Preferences:
+          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      - Kind: CreateFolder
+        Description: Create the workdir
+        Preferences:
+          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
       - Kind: Download
         Description: Download the release .zip file
         Preferences:

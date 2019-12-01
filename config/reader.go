@@ -97,6 +97,16 @@ func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 				step.Source = preferencesYaml["Source"].(string)
 				step.Destination = preferencesYaml["Destination"].(string)
 				steps = append(steps, step)
+			case "Delete":
+				step := stepDefinition.Delete{}
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Path = preferencesYaml["Path"].(string)
+				steps = append(steps, step)
+			case "CreateFolder":
+				step := stepDefinition.CreateFolder{}
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Path = preferencesYaml["Path"].(string)
+				steps = append(steps, step)
 			}
 		}
 	}
