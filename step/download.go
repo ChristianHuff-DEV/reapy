@@ -2,8 +2,10 @@ package step
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
@@ -22,10 +24,19 @@ func (this Download) GetDescription() string {
 	return this.Description
 }
 
-func (this Download) Execute() {
-	if err := DownloadFile("tomcat.zip", this.DownloadURL); err != nil {
+func (this Download) Execute() model.Result {
+
+	// Extract the filename from the last part of the URL (everything after the last "/")
+	fileName := this.DownloadURL[strings.LastIndex(this.DownloadURL, "/")+1:]
+
+	log.Print(this.DownloadURL)
+	log.Print(fileName)
+
+	if err := DownloadFile(this.DownloadPath+"/"+fileName, this.DownloadURL); err != nil {
 		panic(err)
 	}
+
+	return model.Result{WasSuccessful: true}
 }
 
 // DownloadFile will download a url to a local file. It's efficient because it will

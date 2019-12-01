@@ -93,6 +93,9 @@ func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 			case "Unzip":
 				step := stepDefinition.Unzip{}
 				step.Kind = kind
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Source = preferencesYaml["Source"].(string)
+				step.Destination = preferencesYaml["Destination"].(string)
 				steps = append(steps, step)
 			}
 		}
