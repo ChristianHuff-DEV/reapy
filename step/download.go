@@ -39,17 +39,21 @@ func (download *Download) FromConfig(configYaml map[string]interface{}) {
 }
 
 // Execute downloads the file found at a given url
-func (download Download) Execute() model.Result {
+func (download Download) Execute() (result model.Result) {
 	log.Printf("Downloading %s", download.URL)
 
 	// Extract the filename from the last part of the URL (everything after the last "/")
 	fileName := download.URL[strings.LastIndex(download.URL, "/")+1:]
 
 	if err := DownloadFile(download.Path+"/"+fileName, download.URL); err != nil {
-		panic(err)
+		result.WasSuccessful = false
+		result.Message = err.Error()
+		return result
 	}
 
-	return model.Result{WasSuccessful: true}
+	result.WasSuccessful = true
+	result.Message = "downlaoded"
+	return result
 }
 
 // DownloadFile will download a url to a local file. It's efficient because it will

@@ -105,6 +105,6 @@ func unzipFile(src, dest string) (result model.Result) {
 	}
 
 	result.WasSuccessful = true
-	result.Message = "Unpacked"
+	result.Message = "unpacked"
 	return result
 }
