@@ -13,6 +13,11 @@ import (
 // KindCommand defines the name for a command step in the config file
 const KindCommand = "Command"
 
+const fieldNamePreferences = "Preferences"
+const fieldNameCommand = "Command"
+const fieldNamePath = "Path"
+const fieldNameArgs = "Args"
+
 // Command executes the defined command
 type Command struct {
 	model.RunnableStep
@@ -34,13 +39,20 @@ func (command Command) GetDescription() string {
 // FromConfig create a command struct from the given config
 func (command *Command) FromConfig(stepConfig map[string]interface{}) {
 	command.Kind = KindCommand
-	preferencesYaml := stepConfig["Preferences"].(map[string]interface{})
-	command.Command = preferencesYaml["Command"].(string)
-	var args []string
-	for _, arg := range preferencesYaml["Args"].([]interface{}) {
-		args = append(args, arg.(string))
+	preferencesYaml := stepConfig[fieldNamePreferences].(map[string]interface{})
+	command.Command = preferencesYaml[fieldNameCommand].(string)
+
+	// Extract the "Args" field if the exist
+	if argsYaml, ok := preferencesYaml[fieldNameArgs].([]interface{}); ok {
+		var args []string
+		for _, arg := range argsYaml {
+			args = append(args, arg.(string))
+		}
+		command.Args = args
 	}
-	if path, ok := preferencesYaml["Path"].(string); ok {
+
+	// Extract "Path" field
+	if path, ok := preferencesYaml[fieldNamePath].(string); ok {
 		command.Path = path
 	} else {
 		command.Path = ""
@@ -54,10 +66,9 @@ func (command Command) Execute() (result model.Result) {
 	cmd := exec.Command(command.Command, command.Args...)
 	cmd.Dir = command.Path
 
+	// Print the output of the command to stdout and stderr
 	var stdBuffer bytes.Buffer
-
 	mw := io.MultiWriter(os.Stdout, &stdBuffer)
-
 	cmd.Stdout = mw
 	cmd.Stderr = mw
 
