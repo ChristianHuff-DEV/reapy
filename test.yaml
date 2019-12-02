@@ -5,28 +5,8 @@ Plans:
     Tasks:
     - Name: Download release file
       Steps:
-      - Kind: Command
-        Description: Echo "Hello World"
-        Preferences:
-          Command: "cmd /c echo"
-          Args:
-          - Hello
-          - World
-      - Kind: Delete
-        Description: Clean up the workdir
-        Preferences:
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      - Kind: CreateFolder
-        Description: Create the workdir
-        Preferences:
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
       - Kind: Download
         Description: Download the release .zip file
         Preferences:
           DownloadURL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.zip
           DownloadPath: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      - Kind: Unzip
-        Description: Unzip the release .zip file
-        Preferences:
-          Source: ignore/apache-tomcat-8.5.49.zip
-          Destination: ignore

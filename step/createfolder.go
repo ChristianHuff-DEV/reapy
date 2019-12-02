@@ -6,23 +6,38 @@ import "os"
 
 import "log"
 
+// KindCreateFolder defines the name for a create folder step in the config file
+const KindCreateFolder = "CreateFolder"
+
+// CreateFolder is a step that is used to create a folder
 type CreateFolder struct {
 	model.RunnableStep
 	Path string
 }
 
-func (this CreateFolder) GetKind() string {
-	return this.Kind
+// FromConfig create the struct representation of a step creating a folder
+func (createFolder *CreateFolder) FromConfig(configYaml map[string]interface{}) {
+	createFolder.Kind = KindCreateFolder
+	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
+	createFolder.Path = preferencesYaml["Path"].(string)
 }
 
-func (this CreateFolder) GetDescription() string {
-	return this.Description
+// GetKind returns the type this step is of
+func (createFolder CreateFolder) GetKind() string {
+	return createFolder.Kind
 }
 
-func (this CreateFolder) Execute() model.Result {
-	return create(this.Path)
+// GetDescription returns a summary of what this step does
+func (createFolder CreateFolder) GetDescription() string {
+	return createFolder.Description
 }
 
+// Execute create a folder at a defined path
+func (createFolder CreateFolder) Execute() model.Result {
+	return create(createFolder.Path)
+}
+
+// Create makes a new folder at the given path
 func create(path string) model.Result {
 	log.Printf("Create folder %s", path)
 	//Attempt to create the directory and ignore any issues

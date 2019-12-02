@@ -1,14 +1,23 @@
 package config
 
 import (
+	"io/ioutil"
 	"log"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
+	"github.com/ChristianHuff-DEV/reapy/step"
 	stepDefinition "github.com/ChristianHuff-DEV/reapy/step"
 	"gopkg.in/yaml.v3"
 )
 
-func Extract(configYaml []byte) (config model.Config) {
+// Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
+func Extract(filePath string) (config model.Config) {
+
+	configYaml, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Panic(err)
+	}
+
 	var configMap map[string]interface{}
 
 	if err := yaml.Unmarshal(configYaml, &configMap); err != nil {
@@ -17,6 +26,7 @@ func Extract(configYaml []byte) (config model.Config) {
 	return parseConfig(configMap)
 }
 
+// parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables and plans
 func parseConfig(configYaml map[string]interface{}) (config model.Config) {
 	// Variables
 	config.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
@@ -26,6 +36,7 @@ func parseConfig(configYaml map[string]interface{}) (config model.Config) {
 	return
 }
 
+// parseVariables extracts the first section of the yaml file that defines the variables which might be used in the later definition of tasks/steps
 func parseVariables(variablesYaml map[string]interface{}) (variables map[string]string) {
 	variables = make(map[string]string)
 
@@ -37,6 +48,7 @@ func parseVariables(variablesYaml map[string]interface{}) (variables map[string]
 	return variables
 }
 
+// parsePlans creates the struct representation of the plans section in the yaml file.
 func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
 	// Iterate plans
 	for _, planYaml := range plansYaml {
@@ -57,6 +69,7 @@ func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
 	return plans
 }
 
+// parseTasks creates the struct representation of the tasks section in the yaml file.
 func parseTasks(tasksYaml []interface{}) (tasks []model.Task) {
 	//Iterate tasks
 	for _, taskYaml := range tasksYaml {
@@ -75,52 +88,37 @@ func parseTasks(tasksYaml []interface{}) (tasks []model.Task) {
 	return tasks
 }
 
+// parseSteps creates the struct representation of the steps section in the yaml file.
+// It determines which kind of step is defined and create the correct implementation for it.
 func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 	//Iterate tasks
 	for _, stepYaml := range stepsYaml {
 
-		stepYaml := stepYaml.(map[string](interface{}))
+		stepYaml := stepYaml.(map[string]interface{})
 
+		// Create the correct instance based on the type of step
 		if kind, ok := stepYaml["Kind"].(string); ok {
 			switch kind {
-			case "Download":
+			case step.KindDownload:
 				step := stepDefinition.Download{}
-				step.Kind = kind
-				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
-				step.DownloadURL = preferencesYaml["DownloadURL"].(string)
-				step.DownloadPath = preferencesYaml["DownloadPath"].(string)
-				steps = append(steps, step)
-			case "Unzip":
+				step.FromConfig(stepYaml)
+				steps = append(steps, &step)
+			case step.KindUnzip:
 				step := stepDefinition.Unzip{}
-				step.Kind = kind
-				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
-				step.Source = preferencesYaml["Source"].(string)
-				step.Destination = preferencesYaml["Destination"].(string)
-				steps = append(steps, step)
-			case "Delete":
+				step.FromConfig(stepYaml)
+				steps = append(steps, &step)
+			case step.KindDelete:
 				step := stepDefinition.Delete{}
-				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
-				step.Path = preferencesYaml["Path"].(string)
-				steps = append(steps, step)
-			case "CreateFolder":
+				step.FromConfig(stepYaml)
+				steps = append(steps, &step)
+			case step.KindCreateFolder:
 				step := stepDefinition.CreateFolder{}
-				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
-				step.Path = preferencesYaml["Path"].(string)
-				steps = append(steps, step)
-			case "Command":
+				step.FromConfig(stepYaml)
+				steps = append(steps, &step)
+			case step.KindCommand:
 				step := stepDefinition.Command{}
-				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
-				step.Command = preferencesYaml["Command"].(string)
-				var args []string
-				for _, arg := range preferencesYaml["Args"].([]interface{}) {
-					args = append(args, arg.(string))
-				}
-				if path, ok := preferencesYaml["Path"].(string); ok {
-					step.Path = path
-				} else {
-					step.Path = ""
-				}
-				steps = append(steps, step)
+				step.FromConfig(stepYaml)
+				steps = append(steps, &step)
 			}
 		}
 	}

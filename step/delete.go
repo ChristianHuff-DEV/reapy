@@ -6,24 +6,39 @@ import (
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
 
+// KindDelete defines the name for a delete step in the config file
+const KindDelete = "Delete"
+
+// Delete is a step used to delete a file/folder
 type Delete struct {
 	model.RunnableStep
 	Path string
 }
 
-func (this Delete) GetKind() string {
-	return this.Kind
+// GetKind returns the type this step is of
+func (delete Delete) GetKind() string {
+	return delete.Kind
 }
 
-func (this Delete) GetDescription() string {
-	return this.Description
+// GetDescription returns a summary of what this step does
+func (delete Delete) GetDescription() string {
+	return delete.Description
 }
 
-func (this Delete) Execute() model.Result {
-	return delete(this.Path)
+// FromConfig create the struct representation of a step deleting a file/folder
+func (delete *Delete) FromConfig(configYaml map[string]interface{}) {
+	delete.Kind = KindDelete
+	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
+	delete.Path = preferencesYaml["Path"].(string)
 }
 
-func delete(path string) (result model.Result) {
+// Execute trigger the deletion of a file/folder
+func (delete Delete) Execute() model.Result {
+	return deletePath(delete.Path)
+}
+
+// delete removes the file/folder at the given path
+func deletePath(path string) (result model.Result) {
 	f, err := os.Stat(path)
 	if err != nil {
 		result.WasSuccessful = false

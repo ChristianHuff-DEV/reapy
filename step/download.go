@@ -10,29 +10,44 @@ import (
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
 
+// KindDownload defines the name for a download step in the config file
+const KindDownload = "Download"
+
+// Download represents a step used to download a file from aj url
 type Download struct {
 	model.RunnableStep
 	DownloadURL  string
 	DownloadPath string
 }
 
-func (this Download) GetKind() string {
-	return this.Kind
+// GetKind returns the type this task is of
+func (download Download) GetKind() string {
+	return download.Kind
 }
 
-func (this Download) GetDescription() string {
-	return this.Description
+// GetDescription returns a text summarizing what this step does
+func (download Download) GetDescription() string {
+	return download.Description
 }
 
-func (this Download) Execute() model.Result {
+// FromConfig create the struct representation of a download step
+func (download *Download) FromConfig(configYaml map[string]interface{}) {
+	download.Kind = KindDownload
+	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
+	download.DownloadURL = preferencesYaml["DownloadURL"].(string)
+	download.DownloadPath = preferencesYaml["DownloadPath"].(string)
+}
+
+// Execute downloads the file found at a given url
+func (download Download) Execute() model.Result {
 
 	// Extract the filename from the last part of the URL (everything after the last "/")
-	fileName := this.DownloadURL[strings.LastIndex(this.DownloadURL, "/")+1:]
+	fileName := download.DownloadURL[strings.LastIndex(download.DownloadURL, "/")+1:]
 
-	log.Print(this.DownloadURL)
+	log.Print(download.DownloadURL)
 	log.Print(fileName)
 
-	if err := DownloadFile(this.DownloadPath+"/"+fileName, this.DownloadURL); err != nil {
+	if err := DownloadFile(download.DownloadPath+"/"+fileName, download.DownloadURL); err != nil {
 		panic(err)
 	}
 

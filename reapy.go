@@ -2,9 +2,6 @@
 package main
 
 import (
-	"io/ioutil"
-	"log"
-
 	c "github.com/ChristianHuff-DEV/reapy/config"
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
@@ -17,15 +14,12 @@ func main() {
 	}
 }
 
+// init will read the config yaml before starting the app itself
 func init() {
 	config = readPlanDefinition()
 }
 
+// readPlanDefinition parses a given config yaml file into the config instance
 func readPlanDefinition() model.Config {
-	// Read the plans from the plans.json file
-	planDefinition, err := ioutil.ReadFile("test.yaml")
-	if err != nil {
-		log.Panic(err)
-	}
-	return c.Extract(planDefinition)
+	return c.Extract("test.yaml")
 }

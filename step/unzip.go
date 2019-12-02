@@ -10,25 +10,41 @@ import (
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
 
+// KindUnzip defines the name for a unzip step in the config file
+const KindUnzip = "Unzip"
+
+// Unzip represents a task used to unzip a zip archive file
 type Unzip struct {
 	model.RunnableStep
 	Source      string
 	Destination string
 }
 
-func (this Unzip) GetKind() string {
-	return this.Kind
+// GetKind returns the type this step is of
+func (unzip Unzip) GetKind() string {
+	return unzip.Kind
 }
 
-func (this Unzip) GetDescription() string {
-	return this.Description
+// GetDescription returns a text summarizing what this step does
+func (unzip Unzip) GetDescription() string {
+	return unzip.Description
 }
 
-func (this Unzip) Execute() model.Result {
-	return unzip(this.Source, this.Destination)
+// FromConfig creates the struct representation of a unzip step
+func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) {
+	unzip.Kind = KindUnzip
+	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
+	unzip.Source = preferencesYaml["Source"].(string)
+	unzip.Destination = preferencesYaml["Destination"].(string)
 }
 
-func unzip(src, dest string) (result model.Result) {
+// Execute unzips a file to a defined location
+func (unzip Unzip) Execute() model.Result {
+	return unzipFile(unzip.Source, unzip.Destination)
+}
+
+// unzipFile extracts the given source file to the destination folder
+func unzipFile(src, dest string) (result model.Result) {
 
 	// Create a reader for the specified file
 	reader, err := zip.OpenReader(src)
