@@ -16,8 +16,8 @@ const KindDownload = "Download"
 // Download represents a step used to download a file from aj url
 type Download struct {
 	model.RunnableStep
-	DownloadURL  string
-	DownloadPath string
+	URL  string
+	Path string
 }
 
 // GetKind returns the type this task is of
@@ -34,20 +34,18 @@ func (download Download) GetDescription() string {
 func (download *Download) FromConfig(configYaml map[string]interface{}) {
 	download.Kind = KindDownload
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
-	download.DownloadURL = preferencesYaml["DownloadURL"].(string)
-	download.DownloadPath = preferencesYaml["DownloadPath"].(string)
+	download.URL = preferencesYaml["URL"].(string)
+	download.Path = preferencesYaml["Path"].(string)
 }
 
 // Execute downloads the file found at a given url
 func (download Download) Execute() model.Result {
+	log.Printf("Downloading %s", download.URL)
 
 	// Extract the filename from the last part of the URL (everything after the last "/")
-	fileName := download.DownloadURL[strings.LastIndex(download.DownloadURL, "/")+1:]
+	fileName := download.URL[strings.LastIndex(download.URL, "/")+1:]
 
-	log.Print(download.DownloadURL)
-	log.Print(fileName)
-
-	if err := DownloadFile(download.DownloadPath+"/"+fileName, download.DownloadURL); err != nil {
+	if err := DownloadFile(download.Path+"/"+fileName, download.URL); err != nil {
 		panic(err)
 	}
 

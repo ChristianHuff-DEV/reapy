@@ -3,6 +3,7 @@ package step
 import (
 	"archive/zip"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,6 +41,7 @@ func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) {
 
 // Execute unzips a file to a defined location
 func (unzip Unzip) Execute() model.Result {
+	log.Printf("Unzipping %s to %s", unzip.Source, unzip.Destination)
 	return unzipFile(unzip.Source, unzip.Destination)
 }
 

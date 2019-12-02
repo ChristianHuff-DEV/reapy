@@ -39,7 +39,7 @@ func (createFolder CreateFolder) Execute() model.Result {
 
 // Create makes a new folder at the given path
 func create(path string) model.Result {
-	log.Printf("Create folder %s", path)
+	log.Printf("Creating %s", path)
 	//Attempt to create the directory and ignore any issues
 	err := os.Mkdir(path, os.ModeDir)
 	if err != nil {

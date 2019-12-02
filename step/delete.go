@@ -1,6 +1,7 @@
 package step
 
 import (
+	"log"
 	"os"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
@@ -39,6 +40,7 @@ func (delete Delete) Execute() model.Result {
 
 // delete removes the file/folder at the given path
 func deletePath(path string) (result model.Result) {
+	log.Printf("Deleting %s", path)
 	f, err := os.Stat(path)
 	if err != nil {
 		result.WasSuccessful = false
