@@ -52,7 +52,7 @@ func (download Download) Execute() (result model.Result) {
 	}
 
 	result.WasSuccessful = true
-	result.Message = "downlaoded"
+	result.Message = "downloaded"
 	return result
 }
 
