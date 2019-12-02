@@ -93,6 +93,33 @@ func parseSteps(stepsYaml []interface{}) (steps []model.Step) {
 			case "Unzip":
 				step := stepDefinition.Unzip{}
 				step.Kind = kind
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Source = preferencesYaml["Source"].(string)
+				step.Destination = preferencesYaml["Destination"].(string)
+				steps = append(steps, step)
+			case "Delete":
+				step := stepDefinition.Delete{}
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Path = preferencesYaml["Path"].(string)
+				steps = append(steps, step)
+			case "CreateFolder":
+				step := stepDefinition.CreateFolder{}
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Path = preferencesYaml["Path"].(string)
+				steps = append(steps, step)
+			case "Command":
+				step := stepDefinition.Command{}
+				preferencesYaml := stepYaml["Preferences"].(map[string]interface{})
+				step.Command = preferencesYaml["Command"].(string)
+				var args []string
+				for _, arg := range preferencesYaml["Args"].([]interface{}) {
+					args = append(args, arg.(string))
+				}
+				if path, ok := preferencesYaml["Path"].(string); ok {
+					step.Path = path
+				} else {
+					step.Path = ""
+				}
 				steps = append(steps, step)
 			}
 		}

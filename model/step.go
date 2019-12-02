@@ -3,7 +3,7 @@ package model
 type Step interface {
 	GetKind() string
 	GetDescription() string
-	Execute()
+	Execute() Result
 }
 
 type RunnableStep struct {
