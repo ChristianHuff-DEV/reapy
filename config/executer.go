@@ -12,8 +12,6 @@ func Execute(steps model.Plan) {
 			// Print what when wrong if an error occurred
 			if !result.WasSuccessful {
 				log.Print(result.Message)
-			} else {
-				log.Print("Executing finished successfully")
 			}
 		}
 	}

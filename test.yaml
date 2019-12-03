@@ -5,6 +5,24 @@ Plans:
     Tasks:
     - Name: Download release file
       Steps:
+      - Kind: Delete
+        Description: Clean up the workdir
+        Preferences:
+          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      - Kind: CreateFolder
+        Description: Create the workdir
+        Preferences:
+          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      - Kind: Download
+        Description: Download the release .zip file
+        Preferences:
+          URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49-windows-x64.zip
+          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      - Kind: Unzip
+        Description: Unzip the release .zip file
+        Preferences:
+          Source: ignore/apache-tomcat-8.5.49-windows-x64.zip
+          Destination: ignore
       - Kind: Command
         Description: Execute the command installing Tomcat as a Windows service
         Preferences:
@@ -13,28 +31,10 @@ Plans:
           Args:
             - "/C"
             - "service.bat install"
-      - Kind: Command
-        Description: Execute the command installing Tomcat as a Windows service
-        Preferences:
-          Command: "./tomcat8.exe"
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore\\apache-tomcat-8.5.49\\bin"
-          Args:
-            - "//DS//Tomcat8"
-      # - Kind: Delete
-      #   Description: Clean up the workdir
+      # - Kind: Command
+      #   Description: Execute the command uninstalling Tomcat as a Windows service
       #   Preferences:
-      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      # - Kind: CreateFolder
-      #   Description: Create the workdir
-      #   Preferences:
-      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      # - Kind: Download
-      #   Description: Download the release .zip file
-      #   Preferences:
-      #     URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49-windows-x64.zip
-      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      # - Kind: Unzip
-      #   Description: Unzip the release .zip file
-      #   Preferences:
-      #     Source: ignore/apache-tomcat-8.5.49-windows-x64.zip
-      #     Destination: ignore
+      #     Command: "./tomcat8.exe"
+      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore\\apache-tomcat-8.5.49\\bin"
+      #     Args:
+      #       - "//DS//Tomcat8"
