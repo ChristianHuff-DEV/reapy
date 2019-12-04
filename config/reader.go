@@ -3,12 +3,25 @@ package config
 import (
 	"io/ioutil"
 	"log"
+	"os"
+	"time"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/ChristianHuff-DEV/reapy/step"
 	stepDefinition "github.com/ChristianHuff-DEV/reapy/step"
+	"github.com/briandowns/spinner"
+	"github.com/c-bata/go-prompt"
 	"gopkg.in/yaml.v3"
 )
+
+var baseCommands = []prompt.Suggest{{Text: "help", Description: "Show available commands"}, {Text: "exit", Description: "Exit the application"}}
+
+var baseFunctions = map[string]func(){"help": func() {
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Start()
+	time.Sleep(4 * time.Second)
+	s.Stop()
+}, "exit": func() { os.Exit(0) }}
 
 // Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
 func Extract(filePath string) (config model.Config) {
@@ -23,15 +36,29 @@ func Extract(filePath string) (config model.Config) {
 	if err := yaml.Unmarshal(configYaml, &configMap); err != nil {
 		log.Panicf("Unable to read plan definition: %s", err)
 	}
-	return parseConfig(configMap)
+
+	config.Yaml = parseConfig(configMap)
+
+	config.Completer = func(document prompt.Document) []prompt.Suggest {
+		return baseCommands
+	}
+
+	config.Executor = func(command string) {
+
+		if function, ok := baseFunctions[command]; ok {
+			function()
+		}
+	}
+
+	return config
 }
 
 // parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables and plans
-func parseConfig(configYaml map[string]interface{}) (config model.Config) {
+func parseConfig(configYaml map[string]interface{}) (yaml model.Yaml) {
 	// Variables
-	config.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
+	yaml.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
 	// Plans
-	config.Plans = parsePlans(configYaml["Plans"].([]interface{}))
+	yaml.Plans = parsePlans(configYaml["Plans"].([]interface{}))
 
 	return
 }

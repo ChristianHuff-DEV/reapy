@@ -3,8 +3,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -20,32 +18,8 @@ func main() {
 	// for _, plan := range config.Plans {
 	// 	c.Execute(plan)
 	// }
-	p := prompt.New(executor, completer)
+	p := prompt.New(config.Executor, config.Completer)
 	p.Run()
-}
-
-// completer provides the available commands
-func completer(document prompt.Document) []prompt.Suggest {
-	return []prompt.Suggest{
-		{Text: "help"},
-		{Text: "execute"},
-		{Text: "exit"},
-	}
-}
-
-func executor(command string) {
-	switch command {
-	case "help":
-		showWait()
-		log.Print("Executed help")
-		showChecklist()
-	case "execute":
-		log.Print("Execute execute")
-		askQuestion()
-	case "exit":
-		os.Exit(0)
-	}
-
 }
 
 func askQuestion() {

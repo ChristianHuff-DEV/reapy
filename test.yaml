@@ -3,34 +3,34 @@ Variables:
 Plans:
   - Name: Install Tomcat as a Windows service
     Tasks:
-    - Name: Download release file
+    - Name: Download Tomcat and install it as a Windows service
       Steps:
-      - Kind: Delete
-        Description: Clean up the workdir
-        Preferences:
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      - Kind: CreateFolder
-        Description: Create the workdir
-        Preferences:
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      # - Kind: Delete
+      #   Description: Clean up the workdir
+      #   Preferences:
+      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      # - Kind: CreateFolder
+      #   Description: Create the workdir
+      #   Preferences:
+      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
       - Kind: Download
         Description: Download the release .zip file
         Preferences:
           URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49-windows-x64.zip
           Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
-      - Kind: Unzip
-        Description: Unzip the release .zip file
-        Preferences:
-          Source: ignore/apache-tomcat-8.5.49-windows-x64.zip
-          Destination: ignore
-      - Kind: Command
-        Description: Execute the command installing Tomcat as a Windows service
-        Preferences:
-          Command: "cmd.exe"
-          Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore\\apache-tomcat-8.5.49\\bin"
-          Args:
-            - "/C"
-            - "service.bat install"
+      # - Kind: Unzip
+      #   Description: Unzip the release .zip file
+      #   Preferences:
+      #     Source: ignore/apache-tomcat-8.5.49-windows-x64.zip
+      #     Destination: ignore
+      # - Kind: Command
+      #   Description: Execute the command installing Tomcat as a Windows service
+      #   Preferences:
+      #     Command: "cmd.exe"
+      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore\\apache-tomcat-8.5.49\\bin"
+      #     Args:
+      #       - "/C"
+      #       - "service.bat install"
       # - Kind: Command
       #   Description: Execute the command uninstalling Tomcat as a Windows service
       #   Preferences:

@@ -1,7 +1,18 @@
 package model
 
-// Config defines the root structure of the config yaml file
+import "github.com/c-bata/go-prompt"
+
+// Config is the complete result of reading the yaml file and creating the possible commands available from it
 type Config struct {
+	Yaml Yaml
+	// Completer defines which prompts are available in the terminal
+	Completer func(document prompt.Document) []prompt.Suggest
+	// Executor is the mapping between a command and the function to run
+	Executor func(command string)
+}
+
+// Yaml represents the root structure of the yaml file defining the plans
+type Yaml struct {
 	Variables map[string]string
 	Plans     []Plan
 }
