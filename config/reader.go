@@ -3,25 +3,14 @@ package config
 import (
 	"io/ioutil"
 	"log"
-	"os"
-	"time"
+	"strings"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/ChristianHuff-DEV/reapy/step"
 	stepDefinition "github.com/ChristianHuff-DEV/reapy/step"
-	"github.com/briandowns/spinner"
 	"github.com/c-bata/go-prompt"
 	"gopkg.in/yaml.v3"
 )
-
-var baseCommands = []prompt.Suggest{{Text: "help", Description: "Show available commands"}, {Text: "exit", Description: "Exit the application"}}
-
-var baseFunctions = map[string]func(){"help": func() {
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Start()
-	time.Sleep(4 * time.Second)
-	s.Stop()
-}, "exit": func() { os.Exit(0) }}
 
 // Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
 func Extract(filePath string) (config model.Config) {
@@ -39,12 +28,20 @@ func Extract(filePath string) (config model.Config) {
 
 	config.Yaml = parseConfig(configMap)
 
-	config.Completer = func(document prompt.Document) []prompt.Suggest {
-		return baseCommands
+	config.Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
+
+		for _, value := range baseSuggests {
+			if strings.HasPrefix(value.Text, document.Text) {
+				suggests = append(suggests, value)
+			}
+		}
+
+		return suggests
 	}
 
 	config.Executor = func(command string) {
 
+		// Find the function for the given command and execute it
 		if function, ok := baseFunctions[command]; ok {
 			function()
 		}
