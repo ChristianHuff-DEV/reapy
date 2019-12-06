@@ -3,12 +3,10 @@ package config
 import (
 	"io/ioutil"
 	"log"
-	"strings"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/ChristianHuff-DEV/reapy/step"
 	stepDefinition "github.com/ChristianHuff-DEV/reapy/step"
-	"github.com/c-bata/go-prompt"
 	"gopkg.in/yaml.v3"
 )
 
@@ -28,24 +26,9 @@ func Extract(filePath string) (config model.Config) {
 
 	config.Yaml = parseConfig(configMap)
 
-	config.Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
+	config.Completer = completer
 
-		for _, value := range baseSuggests {
-			if strings.HasPrefix(value.Text, document.Text) {
-				suggests = append(suggests, value)
-			}
-		}
-
-		return suggests
-	}
-
-	config.Executor = func(command string) {
-
-		// Find the function for the given command and execute it
-		if function, ok := baseFunctions[command]; ok {
-			function()
-		}
-	}
+	config.Executor = executor
 
 	return config
 }
