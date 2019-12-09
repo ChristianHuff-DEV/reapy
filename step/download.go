@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
+	"github.com/briandowns/spinner"
 )
 
 // KindDownload defines the name for a download step in the config file
@@ -41,6 +43,8 @@ func (download *Download) FromConfig(configYaml map[string]interface{}) {
 // Execute downloads the file found at a given url
 func (download Download) Execute() (result model.Result) {
 	log.Printf("Downloading %s", download.URL)
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Start()
 
 	// Extract the filename from the last part of the URL (everything after the last "/")
 	fileName := download.URL[strings.LastIndex(download.URL, "/")+1:]
@@ -48,9 +52,11 @@ func (download Download) Execute() (result model.Result) {
 	if err := DownloadFile(download.Path+"/"+fileName, download.URL); err != nil {
 		result.WasSuccessful = false
 		result.Message = err.Error()
+		s.Stop()
 		return result
 	}
 
+	s.Stop()
 	result.WasSuccessful = true
 	result.Message = "downloaded"
 	return result

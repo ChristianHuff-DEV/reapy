@@ -3,7 +3,7 @@ package model
 // Config is the complete result of reading the yaml file and creating the possible commands available from it
 type Config struct {
 	Variables map[string]string
-	Plans     []Plan
+	Plans     map[string]Plan
 }
 
 // Plan defines the structure of the equally named node in the config yaml

@@ -52,7 +52,9 @@ func parseVariables(variablesYaml map[string]interface{}) (variables map[string]
 }
 
 // parsePlans creates the struct representation of the plans section in the yaml file.
-func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
+func parsePlans(plansYaml []interface{}) (plans map[string]model.Plan) {
+	plans = make(map[string]model.Plan)
+
 	// Iterate plans
 	for _, planYaml := range plansYaml {
 		var plan model.Plan
@@ -68,7 +70,7 @@ func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
 		// Parse the tasks belonging to this plan
 		plan.Tasks = parseTasks(planYaml["Tasks"].([]interface{}))
 
-		plans = append(plans, plan)
+		plans[plan.Name] = plan
 	}
 
 	return plans

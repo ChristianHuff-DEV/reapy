@@ -30,10 +30,34 @@ var Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
 
 // Executor determines which what to do with the given command
 var Executor = func(command string) {
+
+	// Does the user want to execute a plan?
+	if strings.HasPrefix(command, "execute ") {
+		// Extrace the name of the plan
+		planName := command[len("execute "):]
+		if plan, ok := Config.Plans[planName]; ok {
+			executePlan(plan)
+			return
+		}
+		fmt.Printf("Plan %s not found\n", planName)
+	}
+
 	// Find the function for the given command and execute it
 	if function, ok := baseFunctions[command]; ok {
 		function()
 	} else {
 		fmt.Println("Command not found!")
+	}
+}
+
+func executePlan(plan model.Plan) {
+	for _, task := range plan.Tasks {
+		for _, step := range task.Steps {
+			result := step.Execute()
+			// Print what when wrong if an error occurred
+			if !result.WasSuccessful {
+				fmt.Println(result.Message)
+			}
+		}
 	}
 }
