@@ -1,4 +1,4 @@
-package config
+package cli
 
 import (
 	"io/ioutil"
@@ -24,21 +24,17 @@ func Extract(filePath string) (config model.Config) {
 		log.Panicf("Unable to read plan definition: %s", err)
 	}
 
-	config.Yaml = parseConfig(configMap)
-
-	config.Completer = completer
-
-	config.Executor = executor
+	config = parseConfig(configMap)
 
 	return config
 }
 
 // parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables and plans
-func parseConfig(configYaml map[string]interface{}) (yaml model.Yaml) {
+func parseConfig(configYaml map[string]interface{}) (config model.Config) {
 	// Variables
-	yaml.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
+	config.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
 	// Plans
-	yaml.Plans = parsePlans(configYaml["Plans"].([]interface{}))
+	config.Plans = parsePlans(configYaml["Plans"].([]interface{}))
 
 	return
 }
