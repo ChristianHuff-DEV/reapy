@@ -59,8 +59,10 @@ func parsePlans(plansYaml []interface{}) (plans []model.Plan) {
 
 		planYaml := planYaml.(map[string]interface{})
 
-		if name, ok := planYaml["Name"].(string); ok {
-			plan.Name = name
+		plan.Name = planYaml["Name"].(string)
+
+		if description, ok := planYaml["Description"].(string); ok {
+			plan.Description = description
 		}
 
 		// Parse the tasks belonging to this plan

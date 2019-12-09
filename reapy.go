@@ -7,8 +7,6 @@ import (
 	"github.com/c-bata/go-prompt"
 )
 
-var config model.Config
-
 func main() {
 	// for _, plan := range config.Plans {
 	// 	c.Execute(plan)
@@ -19,7 +17,7 @@ func main() {
 
 // init will read the config yaml before starting the app itself
 func init() {
-	config = readPlanDefinition()
+	cli.Config = readPlanDefinition()
 }
 
 // readPlanDefinition parses a given config yaml file into the config instance

@@ -1,13 +1,5 @@
 package model
 
-import "github.com/c-bata/go-prompt"
-
-// Completer defines which prompts are available in the terminal
-var Completer func(document prompt.Document) []prompt.Suggest
-
-// Executor is the mapping between a command and the function to run
-var Executor func(command string)
-
 // Config is the complete result of reading the yaml file and creating the possible commands available from it
 type Config struct {
 	Variables map[string]string
@@ -16,8 +8,9 @@ type Config struct {
 
 // Plan defines the structure of the equally named node in the config yaml
 type Plan struct {
-	Name  string
-	Tasks []Task
+	Name        string
+	Description string
+	Tasks       []Task
 }
 
 // Task defines the structure of the equally named node in the config yaml

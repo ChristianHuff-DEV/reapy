@@ -1,7 +1,8 @@
 Variables:
   workdir: "Test"
 Plans:
-  - Name: Install Tomcat as a Windows service
+  - Name: Install Tomcat
+    Description: Install Tomcat as a Windows service
     Tasks:
     - Name: Download Tomcat and install it as a Windows service
       Steps:
