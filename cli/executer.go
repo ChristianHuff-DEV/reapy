@@ -8,6 +8,7 @@ import (
 	"github.com/c-bata/go-prompt"
 )
 
+// Config represents the content of the yaml file used to define what this app is capable of doing
 var Config model.Config
 
 // Completer determines the suggestions shown to the user
