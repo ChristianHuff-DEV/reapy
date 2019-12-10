@@ -7,8 +7,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
+	"github.com/briandowns/spinner"
 )
 
 // KindUnzip defines the name for a unzip step in the config file
@@ -42,7 +44,13 @@ func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) {
 // Execute unzips a file to a defined location
 func (unzip Unzip) Execute() model.Result {
 	log.Printf("Unzipping %s to %s", unzip.Source, unzip.Destination)
-	return unzipFile(unzip.Source, unzip.Destination)
+
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Start()
+	result := unzipFile(unzip.Source, unzip.Destination)
+	s.Stop()
+
+	return result
 }
 
 // unzipFile extracts the given source file to the destination folder

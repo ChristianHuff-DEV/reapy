@@ -1,15 +1,16 @@
 Variables:
-  workdir: "Test"
+  workdir: "/home/christian/git/github.com/ChristianHuff-DEV/reapy"
+  tomcat_version: "8.5.49"
 Plans:
   - Name: Install Tomcat
     Description: Install Tomcat as a Windows service
     Tasks:
     - Name: Download Tomcat and install it as a Windows service
       Steps:
-      # - Kind: Delete
-      #   Description: Clean up the workdir
-      #   Preferences:
-      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
+      - Kind: Delete
+        Description: Clean up the workdir
+        Preferences:
+          Path: "${workdir}/ignore"
       - Kind: CreateFolder
         Description: Create the workdir
         Preferences:
@@ -17,13 +18,13 @@ Plans:
       - Kind: Download
         Description: Download the release .zip file
         Preferences:
-          URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49-windows-x64.zip
-          Path: "/home/christian/git/github.com/ChristianHuff-DEV/reapy/ignore"
-      # - Kind: Unzip
-      #   Description: Unzip the release .zip file
-      #   Preferences:
-      #     Source: ignore/apache-tomcat-8.5.49-windows-x64.zip
-      #     Destination: ignore
+          URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
+          Path: "${workdir}/ignore"
+      - Kind: Unzip
+        Description: Unzip the release .zip file
+        Preferences:
+          Source: ${workdir}/ignore/apache-tomcat-${tomcat_version}-windows-x64.zip
+          Destination: ${workdir}/ignore
       # - Kind: Command
       #   Description: Execute the command installing Tomcat as a Windows service
       #   Preferences:
