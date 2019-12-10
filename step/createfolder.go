@@ -41,7 +41,7 @@ func (createFolder CreateFolder) Execute() model.Result {
 func create(path string) (result model.Result) {
 	log.Printf("Creating %s", path)
 	//Attempt to create the directory and ignore any issues
-	err := os.Mkdir(path, os.ModeDir)
+	err := os.Mkdir(path, os.ModePerm)
 	if err != nil {
 		result.WasSuccessful = false
 		result.Message = err.Error()
