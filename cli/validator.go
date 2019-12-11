@@ -7,7 +7,11 @@ import (
 
 // validateVariables ensures that all defined variables are in the correct format
 func validateVariables(variablesYaml map[string]interface{}) error {
-	for key := range variablesYaml {
+	for key, value := range variablesYaml {
+		// Every varable must have a value
+		if value == nil || value == "" {
+			return fmt.Errorf("the variable \"%s\" has no value assigned to it", key)
+		}
 		err := validateVariableName(key)
 		if err != nil {
 			return err
