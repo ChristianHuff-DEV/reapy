@@ -13,7 +13,7 @@ import (
 )
 
 // Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
-func Extract(filePath string) (config model.Config) {
+func Extract(filePath string) (config model.Config, err error) {
 
 	configYaml, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -26,19 +26,28 @@ func Extract(filePath string) (config model.Config) {
 		log.Panicf("Unable to read plan definition: %s", err)
 	}
 
-	config = parseConfig(configMap)
+	config, err = parseConfig(configMap)
+	if err != nil {
+		return config, err
+	}
 
-	return config
+	return config, nil
 }
 
 // parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables and plans
-func parseConfig(configYaml map[string]interface{}) (config model.Config) {
-	// Variables
-	config.Variables = parseVariables(configYaml["Variables"].(map[string]interface{}))
+func parseConfig(configYaml map[string]interface{}) (config model.Config, err error) {
+
+	if variablesYaml, ok := configYaml["Variables"].(map[string]interface{}); ok {
+		err = validateVariables(variablesYaml)
+		if err != nil {
+			return config, err
+		}
+		config.Variables = parseVariables(variablesYaml)
+	}
 	// Plans
 	config.Plans = parsePlans(configYaml["Plans"].([]interface{}), config.Variables)
 
-	return
+	return config, nil
 }
 
 // parseVariables extracts the first section of the yaml file that defines the variables which might be used in the later definition of tasks/steps

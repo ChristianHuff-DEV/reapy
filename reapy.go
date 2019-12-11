@@ -5,6 +5,8 @@ import (
 	"github.com/ChristianHuff-DEV/reapy/cli"
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/c-bata/go-prompt"
+	"github.com/gookit/color"
+	"log"
 )
 
 func main() {
@@ -17,10 +19,15 @@ func main() {
 
 // init will read the config yaml before starting the app itself
 func init() {
-	cli.Config = readPlanDefinition()
+	var err error
+	cli.Config, err = readPlanDefinition()
+	if err != nil {
+		color.Red.Printf("Error reading plans definition file: %s\n", err)
+		log.Fatal(err)
+	}
 }
 
 // readPlanDefinition parses a given config yaml file into the config instance
-func readPlanDefinition() model.Config {
+func readPlanDefinition() (model.Config, error) {
 	return cli.Extract("test.yaml")
 }

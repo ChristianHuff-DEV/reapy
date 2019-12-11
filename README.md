@@ -67,6 +67,8 @@ Allow for user input (Works with Powershell/Command Prompt)
 Alternative to *survey* (Works with Powershell/Command Prompt)
 * [termui](https://github.com/gizak/termui)  
 Charts, lists and other widgets (Works with Powershell/Command Prompt but doesn't look to good)
+* [color](github.com/gookit/color)  
+Allow printing to the console in color
 
 ## Build
 
