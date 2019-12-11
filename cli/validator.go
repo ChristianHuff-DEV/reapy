@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-// validateVariables ensures that all defined variables are in the correct format
+// validateVariables ensures that all defined variables are in the correct format and have a value assigned. The value can't be missing or an empty string.
 func validateVariables(variablesYaml map[string]interface{}) error {
 	for key, value := range variablesYaml {
 		// Every varable must have a value
