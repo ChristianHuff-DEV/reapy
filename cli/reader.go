@@ -175,7 +175,7 @@ func expandVariable(preference string, variables map[string]string) (expandedPre
 		variableName := h[2 : len(h)-1]
 		// Do we have a variables with that name
 		variableValue := variables[variableName]
-		expandedPreference = strings.Replace(preference, h, variableValue, -1)
+		expandedPreference = strings.Replace(expandedPreference, h, variableValue, -1)
 	}
 	return expandedPreference
 }
