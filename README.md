@@ -29,16 +29,17 @@ A small piece of work contributing to the fulfillment of a task or a check to en
 
 The following gives an overview of the bare minimum that needs to work in order for this to be a usable tool.
 
-* [ ] Read plan definition from YAML file
+* [x] Read plan definition from YAML file
 * [ ] Protocol the execution of a plan in a file
 * [ ] Validate the plan definition file
-* [ ] Allow for the definition of variables that can be used in the YAML file
+* [x] Allow for the definition of variables that can be used in the YAML file
 
 #### Steps
 
-* [ ] Unzip file
+* [x] Unzip file
 * [ ] Copy file/folder
-* [ ] Delete file/folder
+* [x] Create folder
+* [x] Delete file/folder
 * [ ] Replace/Add strings to file  
 This should work interactively (ask the user what to fill in)
 * [ ] Stop service
@@ -49,6 +50,8 @@ This should work interactively (ask the user what to fill in)
   * [ ] Validate that repeating the defined steps results in the same check that was unsuccessfull
 * [ ] Read a file and check it for the occurens of string (i.e. errors in a log file)
 * [ ] Wait for something (i.e. wait for the occurens of a specific string in a log file / wait for a service to start / when deleting the a `.war` file in the *webapps* folder of Tomcat, wait that the deployed distribution was delted)
+* [x] Download file
+* [x] execute generic command
 
 ### Additional Features
 
