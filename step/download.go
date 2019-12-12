@@ -22,7 +22,7 @@ type Download struct {
 	Path string
 }
 
-// GetKind returns the type this task is of
+// GetKind returns the type this step is of
 func (download Download) GetKind() string {
 	return download.Kind
 }
@@ -32,7 +32,7 @@ func (download Download) GetDescription() string {
 	return download.Description
 }
 
-// FromConfig create the struct representation of a download step
+// FromConfig creates the struct representation of a download step
 func (download *Download) FromConfig(configYaml map[string]interface{}) error {
 	download.Kind = KindDownload
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
