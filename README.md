@@ -31,7 +31,7 @@ The following gives an overview of the bare minimum that needs to work in order 
 
 * [x] Read plan definition from YAML file
 * [ ] Protocol the execution of a plan in a file
-* [ ] Validate the plan definition file
+* [x] Validate the plan definition file
 * [x] Allow for the definition of variables that can be used in the YAML file
 
 #### Steps
