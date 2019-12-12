@@ -1,3 +1,4 @@
 *.syso
 *.exe
+*.log
 /ignore

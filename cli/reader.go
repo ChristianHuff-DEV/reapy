@@ -15,6 +15,7 @@ import (
 
 // Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
 func Extract(filePath string) (config model.Config, err error) {
+	log.Printf("read config from %s", filePath)
 
 	configYaml, err := ioutil.ReadFile(filePath)
 	if err != nil {

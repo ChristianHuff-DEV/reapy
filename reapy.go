@@ -2,32 +2,50 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/ChristianHuff-DEV/reapy/cli"
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/c-bata/go-prompt"
 	"github.com/gookit/color"
-	"log"
 )
 
 func main() {
-	// for _, plan := range config.Plans {
-	// 	c.Execute(plan)
-	// }
-	p := prompt.New(cli.Executor, cli.Completer)
-	p.Run()
-}
+	file, err := setupLogging()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
 
-// init will read the config yaml before starting the app itself
-func init() {
-	var err error
 	cli.Config, err = readPlanDefinition()
 	if err != nil {
 		color.Red.Printf("Error reading plans definition file: %s\n", err)
 		log.Fatal(err)
 	}
+
+	p := prompt.New(cli.Executor, cli.Completer)
+	p.Run()
+}
+
+func setupLogging() (*os.File, error) {
+	// Create log file
+	file, err := os.OpenFile("reapy.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return nil, err
+	}
+
+	log.SetOutput(file)
+	// Set file as log output
+	return file, nil
 }
 
 // readPlanDefinition parses a given config yaml file into the config instance
-func readPlanDefinition() (model.Config, error) {
-	return cli.Extract("test.yaml")
+func readPlanDefinition() (config model.Config, err error) {
+	log.Println("reading plans configuration file")
+	config, err = cli.Extract("test.yaml")
+	if err != nil {
+		return config, err
+	}
+	return config, nil
 }
