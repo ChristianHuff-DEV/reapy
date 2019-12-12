@@ -27,10 +27,11 @@ func (delete Delete) GetDescription() string {
 }
 
 // FromConfig create the struct representation of a step deleting a file/folder
-func (delete *Delete) FromConfig(configYaml map[string]interface{}) {
+func (delete *Delete) FromConfig(configYaml map[string]interface{}) error {
 	delete.Kind = KindDelete
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	delete.Path = preferencesYaml["Path"].(string)
+	return nil
 }
 
 // Execute trigger the deletion of a file/folder

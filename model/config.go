@@ -28,7 +28,7 @@ type Step interface {
 	// Execute performs the actual work the step is responsible for
 	Execute() Result
 	// FromConfig read the given map (representing the yaml definition) and creates a step instance of it
-	FromConfig(configYaml map[string]interface{})
+	FromConfig(configYaml map[string]interface{}) error
 }
 
 // RunnableStep defines the base struct

@@ -142,23 +142,45 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 			switch kind {
 			case step.KindDownload:
 				step := stepDefinition.Download{}
-				step.FromConfig(stepYaml)
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
 				steps = append(steps, &step)
 			case step.KindUnzip:
 				step := stepDefinition.Unzip{}
-				step.FromConfig(stepYaml)
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
 				steps = append(steps, &step)
 			case step.KindDelete:
 				step := stepDefinition.Delete{}
-				step.FromConfig(stepYaml)
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
 				steps = append(steps, &step)
 			case step.KindCreateFolder:
 				step := stepDefinition.CreateFolder{}
-				step.FromConfig(stepYaml)
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
 				steps = append(steps, &step)
 			case step.KindCommand:
 				step := stepDefinition.Command{}
-				step.FromConfig(stepYaml)
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
+				steps = append(steps, &step)
+			case step.KindService:
+				step := stepDefinition.Service{}
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
 				steps = append(steps, &step)
 			}
 		}

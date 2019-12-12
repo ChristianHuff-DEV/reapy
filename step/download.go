@@ -33,11 +33,12 @@ func (download Download) GetDescription() string {
 }
 
 // FromConfig create the struct representation of a download step
-func (download *Download) FromConfig(configYaml map[string]interface{}) {
+func (download *Download) FromConfig(configYaml map[string]interface{}) error {
 	download.Kind = KindDownload
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	download.URL = preferencesYaml["URL"].(string)
 	download.Path = preferencesYaml["Path"].(string)
+	return nil
 }
 
 // Execute downloads the file found at a given url

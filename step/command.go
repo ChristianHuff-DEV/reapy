@@ -37,7 +37,7 @@ func (command Command) GetDescription() string {
 }
 
 // FromConfig create a command struct from the given config
-func (command *Command) FromConfig(stepConfig map[string]interface{}) {
+func (command *Command) FromConfig(stepConfig map[string]interface{}) error {
 	command.Kind = KindCommand
 	preferencesYaml := stepConfig[fieldNamePreferences].(map[string]interface{})
 	command.Command = preferencesYaml[fieldNameCommand].(string)
@@ -57,6 +57,7 @@ func (command *Command) FromConfig(stepConfig map[string]interface{}) {
 	} else {
 		command.Path = ""
 	}
+	return nil
 }
 
 // Execute runs the defined command

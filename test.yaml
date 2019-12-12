@@ -1,5 +1,5 @@
 Variables:
-  workdir: "/home/christian/git/github.com/ChristianHuff-DEV/reapy"
+  workdir: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
   tomcat_version: "8.5.49"
 Plans:
   - Name: Install Tomcat
@@ -7,24 +7,26 @@ Plans:
     Tasks:
     - Name: Download Tomcat and install it as a Windows service
       Steps:
-      - Kind: Delete
-        Description: Clean up the workdir
-        Preferences:
-          Path: "${workdir}/ignore"
-      - Kind: CreateFolder
-        Description: Create the workdir
-        Preferences:
-          Path: "/home/christian/git/github.com/ChristianHuff-DEV/reapy/ignore"
-      - Kind: Download
-        Description: Download the release .zip file
-        Preferences:
-          URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
-          Path: "${workdir}/ignore"
-      - Kind: Unzip
-        Description: Unzip the release .zip file
-        Preferences:
-          Source: ${workdir}/ignore/apache-tomcat-${tomcat_version}-windows-x64.zip
-          Destination: ${workdir}/ignore
+      - Kind: Service
+        Description: Stop Tomcat
+      # - Kind: Delete
+      #   Description: Clean up the workdir
+      #   Preferences:
+      #     Path: ${workdir}
+      # - Kind: CreateFolder
+      #   Description: Create the workdir
+      #   Preferences:
+      #     Path: ${workdir}
+      # - Kind: Download
+      #   Description: Download the release .zip file
+      #   Preferences:
+      #     URL: http://mirrors.up.pt/pub/apache/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
+      #     Path: ${workdir}
+      # - Kind: Unzip
+      #   Description: Unzip the release .zip file
+      #   Preferences:
+      #     Source: "${workdir}\\apache-tomcat-${tomcat_version}-windows-x64.zip"
+      #     Destination: ${workdir}
       # - Kind: Command
       #   Description: Execute the command installing Tomcat as a Windows service
       #   Preferences:

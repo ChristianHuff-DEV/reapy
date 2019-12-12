@@ -34,11 +34,12 @@ func (unzip Unzip) GetDescription() string {
 }
 
 // FromConfig creates the struct representation of a unzip step
-func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) {
+func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) error {
 	unzip.Kind = KindUnzip
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	unzip.Source = preferencesYaml["Source"].(string)
 	unzip.Destination = preferencesYaml["Destination"].(string)
+	return nil
 }
 
 // Execute unzips a file to a defined location

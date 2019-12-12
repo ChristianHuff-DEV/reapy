@@ -16,10 +16,11 @@ type CreateFolder struct {
 }
 
 // FromConfig create the struct representation of a step creating a folder
-func (createFolder *CreateFolder) FromConfig(configYaml map[string]interface{}) {
+func (createFolder *CreateFolder) FromConfig(configYaml map[string]interface{}) error {
 	createFolder.Kind = KindCreateFolder
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	createFolder.Path = preferencesYaml["Path"].(string)
+	return nil
 }
 
 // GetKind returns the type this step is of
