@@ -11,6 +11,17 @@ Plans:
         Preferences:
           Name: "Tomcat8"
           Action: start
+  - Name: Uninstall Tomcat
+    Tasks:
+    - Name: Uninstall Tomcat service
+      Steps: 
+      - Kind: Command
+        Description: Execute the command uninstalling Tomcat as a Windows service
+        Preferences:
+          Command: "./tomcat8.exe"
+          Path: "${workdir}\\apache-tomcat-${tomcat_version}\\bin"
+          Args:
+            - "//DS//Tomcat8"
   - Name: Install Tomcat
     Description: Install Tomcat as a Windows service
     Tasks:
@@ -44,10 +55,4 @@ Plans:
           Args:
             - "/C"
             - "service.bat install"
-      # - Kind: Command
-      #   Description: Execute the command uninstalling Tomcat as a Windows service
-      #   Preferences:
-      #     Command: "./tomcat8.exe"
-      #     Path: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore\\apache-tomcat-8.5.49\\bin"
-      #     Args:
-      #       - "//DS//Tomcat8"
+      
