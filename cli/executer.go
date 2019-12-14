@@ -6,6 +6,7 @@ import (
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/c-bata/go-prompt"
+	"github.com/gookit/color"
 )
 
 // Config represents the content of the yaml file used to define what this app is capable of doing
@@ -56,7 +57,7 @@ func executePlan(plan model.Plan) {
 			result := step.Execute()
 			// Print what when wrong if an error occurred
 			if !result.WasSuccessful {
-				fmt.Println(result.Message)
+				color.Red.Println(result.Message)
 			}
 		}
 	}
