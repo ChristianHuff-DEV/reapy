@@ -2,6 +2,7 @@ package step
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -39,6 +40,9 @@ func (command Command) GetDescription() string {
 // FromConfig create a command struct from the given config
 func (command *Command) FromConfig(stepConfig map[string]interface{}) error {
 	command.Kind = KindCommand
+	if description, ok := stepConfig["Description"]; ok {
+		command.Description = description.(string)
+	}
 	preferencesYaml := stepConfig[fieldNamePreferences].(map[string]interface{})
 	command.Command = preferencesYaml[fieldNameCommand].(string)
 
@@ -62,6 +66,7 @@ func (command *Command) FromConfig(stepConfig map[string]interface{}) error {
 
 // Execute runs the defined command
 func (command Command) Execute() (result model.Result) {
+	fmt.Println(command.Description)
 	log.Printf("Executing: %s in %s", command.Command, command.Path)
 	// Create the command
 	cmd := exec.Command(command.Command, command.Args...)

@@ -6,6 +6,8 @@ import "os"
 
 import "log"
 
+import "fmt"
+
 // KindCreateFolder defines the name for a create folder step in the config file
 const KindCreateFolder = "CreateFolder"
 
@@ -18,6 +20,9 @@ type CreateFolder struct {
 // FromConfig create the struct representation of a step creating a folder
 func (createFolder *CreateFolder) FromConfig(configYaml map[string]interface{}) error {
 	createFolder.Kind = KindCreateFolder
+	if description, ok := configYaml["Description"]; ok {
+		createFolder.Description = description.(string)
+	}
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	createFolder.Path = preferencesYaml["Path"].(string)
 	return nil
@@ -35,12 +40,13 @@ func (createFolder CreateFolder) GetDescription() string {
 
 // Execute create a folder at a defined path
 func (createFolder CreateFolder) Execute() model.Result {
+	fmt.Println(createFolder.Description)
+	log.Printf("Creating %s", createFolder.Path)
 	return create(createFolder.Path)
 }
 
 // Create makes a new folder at the given path
 func create(path string) (result model.Result) {
-	log.Printf("Creating %s", path)
 	//Attempt to create the directory and ignore any issues
 	err := os.Mkdir(path, os.ModePerm)
 	if err != nil {

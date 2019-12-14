@@ -2,6 +2,7 @@ package step
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -36,6 +37,9 @@ func (unzip Unzip) GetDescription() string {
 // FromConfig creates the struct representation of a unzip step
 func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) error {
 	unzip.Kind = KindUnzip
+	if description, ok := configYaml["Description"]; ok {
+		unzip.Description = description.(string)
+	}
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	unzip.Source = preferencesYaml["Source"].(string)
 	unzip.Destination = preferencesYaml["Destination"].(string)
@@ -44,6 +48,7 @@ func (unzip *Unzip) FromConfig(configYaml map[string]interface{}) error {
 
 // Execute unzips a file to a defined location
 func (unzip Unzip) Execute() model.Result {
+	fmt.Println(unzip.Description)
 	log.Printf("Unzipping %s to %s", unzip.Source, unzip.Destination)
 
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)

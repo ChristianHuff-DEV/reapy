@@ -1,6 +1,7 @@
 package step
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -35,6 +36,9 @@ func (download Download) GetDescription() string {
 // FromConfig creates the struct representation of a download step
 func (download *Download) FromConfig(configYaml map[string]interface{}) error {
 	download.Kind = KindDownload
+	if description, ok := configYaml["Description"]; ok {
+		download.Description = description.(string)
+	}
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	download.URL = preferencesYaml["URL"].(string)
 	download.Path = preferencesYaml["Path"].(string)
@@ -43,6 +47,7 @@ func (download *Download) FromConfig(configYaml map[string]interface{}) error {
 
 // Execute downloads the file found at a given url
 func (download Download) Execute() (result model.Result) {
+	fmt.Println(download.Description)
 	log.Printf("Downloading %s", download.URL)
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
 	s.Start()

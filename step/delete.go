@@ -1,6 +1,7 @@
 package step
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -29,6 +30,9 @@ func (delete Delete) GetDescription() string {
 // FromConfig create the struct representation of a step deleting a file/folder
 func (delete *Delete) FromConfig(configYaml map[string]interface{}) error {
 	delete.Kind = KindDelete
+	if description, ok := configYaml["Description"]; ok {
+		delete.Description = description.(string)
+	}
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 	delete.Path = preferencesYaml["Path"].(string)
 	return nil
@@ -36,12 +40,13 @@ func (delete *Delete) FromConfig(configYaml map[string]interface{}) error {
 
 // Execute trigger the deletion of a file/folder
 func (delete Delete) Execute() model.Result {
+	fmt.Println(delete.Description)
+	log.Printf("Deleting %s", delete.Path)
 	return deletePath(delete.Path)
 }
 
 // delete removes the file/folder at the given path
 func deletePath(path string) (result model.Result) {
-	log.Printf("Deleting %s", path)
 	f, err := os.Stat(path)
 	if err != nil {
 		result.WasSuccessful = false
