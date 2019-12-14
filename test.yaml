@@ -11,6 +11,15 @@ Plans:
         Preferences:
           Name: "Tomcat8"
           Action: start
+  - Name: Stop Tomcat service
+    Tasks:
+    - Name: Stop Tomcat service
+      Steps:
+      - Kind: Service
+        Description: "Stop the Tomcat service"
+        Preferences:
+          Name: "Tomcat8"
+          Action: stop
   - Name: Uninstall Tomcat
     Tasks:
     - Name: Uninstall Tomcat service
