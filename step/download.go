@@ -49,7 +49,7 @@ func (download *Download) FromConfig(configYaml map[string]interface{}) error {
 func (download Download) Execute() (result model.Result) {
 	fmt.Println(download.Description)
 	log.Printf("Downloading %s", download.URL)
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 
 	// Extract the filename from the last part of the URL (everything after the last "/")

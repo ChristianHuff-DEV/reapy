@@ -51,7 +51,7 @@ func (unzip Unzip) Execute() model.Result {
 	fmt.Println(unzip.Description)
 	log.Printf("Unzipping %s to %s", unzip.Source, unzip.Destination)
 
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 	result := unzipFile(unzip.Source, unzip.Destination)
 	s.Stop()
