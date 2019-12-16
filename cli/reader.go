@@ -207,11 +207,17 @@ func expandPreferences(preferences map[string]interface{}, variables map[string]
 				}
 			}
 			expandedPreferences[key] = value
-		case interface{}:
 			// For a single field
-			expandedPreferences[key], err = expandVariable(value.(string), variables)
-			if err != nil {
-				return expandedPreferences, err
+		case interface{}:
+			// Handle string variables (Only string variables can be expanded)
+			if _, ok := value.(string); ok {
+				expandedPreferences[key], err = expandVariable(value.(string), variables)
+				if err != nil {
+					return expandedPreferences, err
+				}
+				// Handle bool variables
+			} else if _, ok := value.(bool); ok {
+				expandedPreferences[key] = value
 			}
 		}
 	}
