@@ -1,8 +1,11 @@
 package step
 
-import "github.com/ChristianHuff-DEV/reapy/model"
+import (
+	"fmt"
 
-import "fmt"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/ChristianHuff-DEV/reapy/model"
+)
 
 // KindChecklist defines the name for a checklist step in the config file
 const KindChecklist = "Checklist"
@@ -12,6 +15,8 @@ type Checklist struct {
 	model.RunnableStep
 	// Items represents the individual checks the user has to tick
 	Items []string
+	// Message can be used to give the user and indication of what the checklist is used for
+	Message string
 }
 
 // GetKind returns the type this step is of
@@ -33,6 +38,10 @@ func (checklist *Checklist) FromConfig(configYaml map[string]interface{}) error 
 
 	preferencesYaml := configYaml["Preferences"].(map[string]interface{})
 
+	if message, ok := preferencesYaml["Message"].(string); ok {
+		checklist.Message = message
+	}
+
 	if items, ok := preferencesYaml["Items"].([]interface{}); ok {
 		for _, item := range items {
 			if item, ok := item.(string); ok {
@@ -49,7 +58,16 @@ func (checklist *Checklist) FromConfig(configYaml map[string]interface{}) error 
 
 // Execute shows the checklist to the user
 func (checklist Checklist) Execute() (result model.Result) {
-	fmt.Println(checklist.GetDescription())
+	checkedItems := []string{}
+	prompt := &survey.MultiSelect{
+		Message: checklist.Message,
+		Options: checklist.Items,
+	}
+	survey.AskOne(prompt, &checkedItems)
+
+	for _, checkItem := range checkedItems {
+		fmt.Println(checkItem)
+	}
 
 	result.WasSuccessful = true
 	result.Message = "all items ticked"
