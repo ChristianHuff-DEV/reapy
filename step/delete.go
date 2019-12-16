@@ -27,7 +27,7 @@ func (delete Delete) GetDescription() string {
 	return delete.Description
 }
 
-// FromConfig create the struct representation of a step deleting a file/folder
+// FromConfig creates the struct representation of a step deleting a file/folder
 func (delete *Delete) FromConfig(configYaml map[string]interface{}) error {
 	delete.Kind = KindDelete
 	if description, ok := configYaml["Description"]; ok {

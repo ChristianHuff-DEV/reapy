@@ -182,6 +182,13 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 					return steps, err
 				}
 				steps = append(steps, &step)
+			case step.KindChecklist:
+				step := stepDefinition.Checklist{}
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
+				steps = append(steps, &step)
 			}
 		}
 	}
@@ -192,6 +199,7 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 // it will check that this variable has been defined and fills it accordingly. If a string contains
 // a variable that is not defined an error is returned.
 func expandPreferences(preferences map[string]interface{}, variables map[string]string) (expandedPreferences map[string]interface{}, err error) {
+	// FIXME: Add check to handle empty preferences map
 	expandedPreferences = make(map[string]interface{})
 	for key, value := range preferences {
 		// A slice has to be handled differently than a map
