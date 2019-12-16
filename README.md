@@ -30,7 +30,7 @@ A small piece of work contributing to the fulfillment of a task or a check to en
 The following gives an overview of the bare minimum that needs to work in order for this to be a usable tool.
 
 * [x] Read plan definition from YAML file
-* [ ] Protocol the execution of a plan in a file
+* [x] Protocol the execution of a plan in a file
 * [x] Validate the plan definition file
 * [x] Allow for the definition of variables that can be used in the YAML file
 
@@ -42,8 +42,8 @@ The following gives an overview of the bare minimum that needs to work in order 
 * [x] Delete file/folder
 * [ ] Replace/Add strings to file  
 This should work interactively (ask the user what to fill in)
-* [ ] Stop service
-* [ ] Start service
+* [x] Stop service
+* [x] Start service
 * [ ] Ask user a question (Yes/No)
 * [ ] Check that a file/folder is present
 * [ ] Define which steps to repeat if a check was unsuccessfull
