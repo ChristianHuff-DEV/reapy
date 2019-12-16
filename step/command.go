@@ -1,12 +1,14 @@
 package step
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
@@ -18,6 +20,7 @@ const fieldNamePreferences = "Preferences"
 const fieldNameCommand = "Command"
 const fieldNamePath = "Path"
 const fieldNameArgs = "Args"
+const fieldNameSilent = "Silent"
 
 // Command executes the defined command
 type Command struct {
@@ -25,6 +28,8 @@ type Command struct {
 	Command string
 	Args    []string
 	Path    string
+	// Whether or not the output of the command is printed to the console
+	Silent bool
 }
 
 // GetKind returns the kind this step represents
@@ -61,6 +66,14 @@ func (command *Command) FromConfig(stepConfig map[string]interface{}) error {
 	} else {
 		command.Path = ""
 	}
+
+	// Extract "Silent" field
+	if silent, ok := preferencesYaml[fieldNameSilent].(bool); ok {
+		command.Silent = silent
+	} else {
+		silent = false
+	}
+
 	return nil
 }
 
@@ -72,11 +85,18 @@ func (command Command) Execute() (result model.Result) {
 	cmd := exec.Command(command.Command, command.Args...)
 	cmd.Dir = command.Path
 
-	// Print the output of the command to stdout and stderr
+	var writer io.Writer
 	var stdBuffer bytes.Buffer
-	mw := io.MultiWriter(os.Stdout, &stdBuffer)
-	cmd.Stdout = mw
-	cmd.Stderr = mw
+
+	// If it's silent we only write to the buffer
+	if command.Silent {
+		writer = io.MultiWriter(&stdBuffer)
+	} else {
+		writer = io.MultiWriter(os.Stdout, &stdBuffer)
+	}
+
+	cmd.Stdout = writer
+	cmd.Stderr = writer
 
 	// Execute the command
 	if err := cmd.Run(); err != nil {
@@ -87,9 +107,15 @@ func (command Command) Execute() (result model.Result) {
 		}
 	}
 
-	// Output of the comman executed. Could later be used to have some logic running on it to
-	// determine if the execution was successful.
-	//output := stdBuffer.String()
+	// Read the output of the executed command
+	// For now we just log it. But it could be later used to determine the success of running the command.
+	log.Println("Command output:")
+	log.Println("-----------------------------------")
+	scanner := bufio.NewScanner(&stdBuffer)
+	for scanner.Scan() {
+		log.Println(scanner.Text())
+	}
+	log.Println("-----------------------------------")
 
 	result.WasSuccessful = true
 	result.Message = "The command \"" + command.Command + "\"" + " was executed successfully."
