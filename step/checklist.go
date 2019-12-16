@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/ChristianHuff-DEV/reapy/model"
 )
 
@@ -63,11 +64,17 @@ func (checklist Checklist) Execute() (result model.Result) {
 		Message: checklist.Message,
 		Options: checklist.Items,
 	}
-	survey.AskOne(prompt, &checkedItems)
 
-	for _, checkItem := range checkedItems {
-		fmt.Println(checkItem)
+	// Validate that all items have been checked
+	// FIXME: Sadly the once not selected get lost once the validation fails (see https://github.com/AlecAivazis/survey/issues/259)
+	validator := func(val interface{}) error {
+		if len(val.([]core.OptionAnswer)) != len(checklist.Items) {
+			return fmt.Errorf("Please finish all tasks in order to continue")
+		}
+		return nil
 	}
+
+	survey.AskOne(prompt, &checkedItems, survey.WithValidator(validator))
 
 	result.WasSuccessful = true
 	result.Message = "all items ticked"

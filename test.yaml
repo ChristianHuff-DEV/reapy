@@ -6,74 +6,79 @@ Plans:
     Tasks:
     - Name: Test
       Steps:
-      - Kind: Command
-        Description: "Write something to the console"
+      - Kind: Checklist
+        Description: "Ensure Tomcat is running"
         Preferences:
-          Silent: true
+          Message: "Perform the following tasks:"
+          Items:
+            - "Check the services window that the Tomcat service is running"
+  - Name: Start Tomcat service
+    Tasks:
+    - Name: Start Tomcat service
+      Steps:
+      - Kind: Service
+        Description: "Start the Tomcat service"
+        Preferences:
+          Name: "Tomcat8"
+          Action: start
+      - Kind: Checklist
+        Description: "Ensure Tomcat is running"
+        Preferences:
+          Message: "Perform the following tasks:"
+          Items:
+            - "Check the services window that the Tomcat service is running"
+  - Name: Stop Tomcat service
+    Tasks:
+    - Name: Stop Tomcat service
+      Steps:
+      - Kind: Service
+        Description: "Stop the Tomcat service"
+        Preferences:
+          Name: "Tomcat8"
+          Action: stop
+  - Name: Uninstall Tomcat
+    Tasks:
+    - Name: Uninstall Tomcat service
+      Steps: 
+      - Kind: Command
+        Description: Execute the command uninstalling Tomcat as a Windows service
+        Preferences:
+          Command: "./tomcat8.exe"
+          Path: "${workdir}\\apache-tomcat-${tomcat_version}\\bin"
+          Args:
+            - "//DS//Tomcat8"
+  - Name: Install Tomcat
+    Description: Install Tomcat as a Windows service
+    Tasks:
+    - Name: Download Tomcat and install it as a Windows service
+      Steps:
+      # - Kind: Service
+      #   Description: Stop Tomcat
+      - Kind: Delete
+        Description: Clean up the workdir
+        Preferences:
+          Path: ${workdir}
+      - Kind: CreateFolder
+        Description: Create the workdir
+        Preferences:
+          Path: ${workdir}
+      - Kind: Download
+        Description: Download the release .zip file
+        Preferences:
+          URL: https://www-us.apache.org/dist/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
+          Path: ${workdir}
+      - Kind: Unzip
+        Description: Unzip the release .zip file
+        Preferences:
+          Source: "${workdir}\\apache-tomcat-${tomcat_version}-windows-x64.zip"
+          Destination: ${workdir}
+      - Kind: Command
+        Description: Execute the command installing Tomcat as a Windows service
+        Preferences:
           Command: "cmd.exe"
           Path: "${workdir}\\apache-tomcat-${tomcat_version}\\bin"
           Args:
-            - "/C echo hello world"
-  # - Name: Start Tomcat service
-  #   Tasks:
-  #   - Name: Start Tomcat service
-  #     Steps:
-  #     - Kind: Service
-  #       Description: "Start the Tomcat service"
-  #       Preferences:
-  #         Name: "Tomcat8"
-  #         Action: start
-  # - Name: Stop Tomcat service
-  #   Tasks:
-  #   - Name: Stop Tomcat service
-  #     Steps:
-  #     - Kind: Service
-  #       Description: "Stop the Tomcat service"
-  #       Preferences:
-  #         Name: "Tomcat8"
-  #         Action: stop
-  # - Name: Uninstall Tomcat
-  #   Tasks:
-  #   - Name: Uninstall Tomcat service
-  #     Steps: 
-  #     - Kind: Command
-  #       Description: Execute the command uninstalling Tomcat as a Windows service
-  #       Preferences:
-  #         Command: "./tomcat8.exe"
-  #         Path: "${workdir}\\apache-tomcat-${tomcat_version}\\bin"
-  #         Args:
-  #           - "//DS//Tomcat8"
-  # - Name: Install Tomcat
-  #   Description: Install Tomcat as a Windows service
-  #   Tasks:
-  #   - Name: Download Tomcat and install it as a Windows service
-  #     Steps:
-  #     # - Kind: Service
-  #     #   Description: Stop Tomcat
-  #     - Kind: Delete
-  #       Description: Clean up the workdir
-  #       Preferences:
-  #         Path: ${workdir}
-  #     - Kind: CreateFolder
-  #       Description: Create the workdir
-  #       Preferences:
-  #         Path: ${workdir}
-  #     - Kind: Download
-  #       Description: Download the release .zip file
-  #       Preferences:
-  #         URL: https://www-us.apache.org/dist/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
-  #         Path: ${workdir}
-  #     - Kind: Unzip
-  #       Description: Unzip the release .zip file
-  #       Preferences:
-  #         Source: "${workdir}\\apache-tomcat-${tomcat_version}-windows-x64.zip"
-  #         Destination: ${workdir}
-  #     - Kind: Command
-  #       Description: Execute the command installing Tomcat as a Windows service
-  #       Preferences:
-  #         Command: "cmd.exe"
-  #         Path: "${workdir}\\apache-tomcat-${tomcat_version}\\bin"
-  #         Args:
-  #           - "/C"
-  #           - "service.bat install"
+            - "/C"
+            - "service.bat install"
+
       
