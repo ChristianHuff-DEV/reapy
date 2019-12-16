@@ -2,13 +2,14 @@
 package main
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 
 	"github.com/ChristianHuff-DEV/reapy/cli"
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/c-bata/go-prompt"
 	"github.com/gookit/color"
+	"github.com/x-cray/logrus-prefixed-formatter"
 )
 
 func main() {
@@ -29,6 +30,13 @@ func main() {
 }
 
 func setupLogging() (*os.File, error) {
+	log.SetFormatter(&prefixed.TextFormatter{
+            DisableColors: true,
+            TimestampFormat : "2006-01-02 15:04:05",
+            FullTimestamp:true,
+						ForceFormatting: true,
+        },)
+
 	// Create log file
 	file, err := os.OpenFile("reapy.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {

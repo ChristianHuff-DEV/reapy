@@ -2,8 +2,8 @@ package cli
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
 	"regexp"
 	"strings"
 

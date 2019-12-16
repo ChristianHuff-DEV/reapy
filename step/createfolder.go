@@ -1,12 +1,11 @@
 package step
 
-import "github.com/ChristianHuff-DEV/reapy/model"
-
-import "os"
-
-import "log"
-
-import "fmt"
+import (
+	"fmt"
+	"github.com/ChristianHuff-DEV/reapy/model"
+	log "github.com/sirupsen/logrus"
+	"os"
+)
 
 // KindCreateFolder defines the name for a create folder step in the config file
 const KindCreateFolder = "CreateFolder"

@@ -3,8 +3,8 @@ package step
 import (
 	"archive/zip"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
