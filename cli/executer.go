@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
@@ -22,8 +23,12 @@ var Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
 	if strings.HasPrefix(text, "execute ") {
 		for _, plan := range Config.Plans {
 			suggests = append(suggests, prompt.Suggest{Text: plan.Name, Description: plan.Description})
+			sort.Slice(suggests, func(i, j int) bool {
+				x := strings.Compare(suggests[i].Text, suggests[j].Text)
+				return x < 0
+			})
 		}
-		return suggests
+		return prompt.FilterFuzzy(suggests, command, true)
 	}
 
 	return prompt.FilterHasPrefix(baseSuggests, command, true)
