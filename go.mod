@@ -7,6 +7,7 @@ require (
 	github.com/briandowns/spinner v1.8.0
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/gookit/color v1.2.0
+	github.com/hpcloud/tail v1.0.0
 	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/mattn/go-tty v0.0.3 // indirect
 	github.com/onsi/ginkgo v1.10.3 // indirect

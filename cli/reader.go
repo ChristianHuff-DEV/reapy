@@ -189,6 +189,13 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 					return steps, err
 				}
 				steps = append(steps, &step)
+			case step.KindWatch:
+				step := stepDefinition.Watch{}
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
+				steps = append(steps, &step)
 			}
 		}
 	}

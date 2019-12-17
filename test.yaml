@@ -1,17 +1,22 @@
 Variables:
   workdir: "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\ignore"
   tomcat_version: "8.5.50"
+  date: "2019-12-17"
 Plans:
   - Name: Test
     Tasks:
     - Name: Test
       Steps:
-      - Kind: Checklist
-        Description: "Ensure Tomcat is running"
+      # - Kind: Service
+      #   Description: "Start the Tomcat service"
+      #   Preferences:
+      #     Name: "Tomcat8"
+      #     Action: start
+      - Kind: Watch
+        Description: "Watch the Tomcat log to check if is started"
         Preferences:
-          Message: "Perform the following tasks:"
-          Items:
-            - "Check the services window that the Tomcat service is running"
+          Path: "${workdir}\\apache-tomcat-${tomcat_version}\\logs\\catalina.${date}.log"
+          Message: "message"
   - Name: Start Tomcat service
     Tasks:
     - Name: Start Tomcat service
