@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/c-bata/go-prompt"
 	"github.com/gookit/color"
@@ -57,12 +58,27 @@ var Executor = func(command string) {
 }
 
 func executePlan(plan model.Plan) {
+	// Label used to break out of the nested loop if a step fails and the user chooses not to continue
+out:
 	for _, task := range plan.Tasks {
 		for _, step := range task.Steps {
 			result := step.Execute()
-			// Print what when wrong if an error occurred
+			// Handle a step failing
 			if !result.WasSuccessful {
 				color.Red.Println(result.Message)
+				response := "Abort, Continue or Retry?"
+				prompt := &survey.Select{
+					Message: "",
+					Options: []string{"Abort", "Continue"},
+				}
+				survey.AskOne(prompt, &response)
+				switch response {
+				case "Abort":
+					// Break out of th nested loop
+					break out
+				case "Continue":
+					// Do nothing. Just continue with the execution.
+				}
 			}
 		}
 	}
