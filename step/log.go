@@ -5,6 +5,7 @@ import (
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/hpcloud/tail"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 // KindWatch defines the name for a log step in the config file
@@ -63,33 +64,38 @@ func (watch Watch) Execute() (result model.Result) {
 	done := make(chan error)
 
 	// Tail the file
-	go tailFile(watch.Path, tail.Config{Follow: true}, done)
+	go tailFile(watch.Path, watch.Message, tail.Config{Follow: true}, done)
 
 	// Get the result of the channel
 	err := <-done
 
-	fmt.Printf("result: %s\n", err)
-
 	if err != nil {
+		fmt.Println("Message was not found")
 		result.WasSuccessful = false
 		result.Message = err.Error()
 		return result
 	}
+
+	fmt.Println("Message was found.")
 
 	result.WasSuccessful = true
 	result.Message = "Message found"
 	return result
 }
 
-func tailFile(filename string, config tail.Config, done chan error) {
-	t, err := tail.TailFile(filename, config)
+// tailFile checks the given file for the given message. It start at the beginning of the file and will return once the string is found. If the string is not yet in the file it will monitor the file and only return once it find the string.
+func tailFile(file, message string, config tail.Config, done chan error) {
+	t, err := tail.TailFile(file, config)
 	if err != nil {
 		log.Println(err)
 		done <- err
 		return
 	}
 	for line := range t.Lines {
-		fmt.Println(line.Text)
+		// Check if we can find the message we are looking for in the current line
+		if strings.Contains(line.Text, message) {
+			done <- nil
+		}
 	}
 	err = t.Wait()
 	if err != nil {
