@@ -42,7 +42,7 @@ func (command Command) GetDescription() string {
 	return command.Description
 }
 
-// FromConfig create a command struct from the given config
+// FromConfig creates a command struct from the given config
 func (command *Command) FromConfig(stepConfig map[string]interface{}) error {
 	command.Kind = KindCommand
 	if description, ok := stepConfig["Description"]; ok {
