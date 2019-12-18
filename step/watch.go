@@ -54,7 +54,6 @@ func (watch *Watch) FromConfig(configYaml map[string]interface{}) error {
 		} else {
 			return fmt.Errorf("preference \"Message\" (string) must be set for %s step", watch.GetKind())
 		}
-		fmt.Println(preferencesYaml)
 		// Read timeout preference
 		if timeout, ok := preferencesYaml["Timeout"].(int); ok {
 			watch.Timeout = timeout
