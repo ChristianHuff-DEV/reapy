@@ -6,6 +6,7 @@ import (
 	"github.com/hpcloud/tail"
 	log "github.com/sirupsen/logrus"
 	"strings"
+	"time"
 )
 
 // KindWatch defines the name for a log step in the config file
@@ -18,6 +19,8 @@ type Watch struct {
 	Path string
 	// Message is the string which the file is watched for
 	Message string
+	// Timeout in seconds after which watching the file will be interrupted (default time out is )
+	Timeout int
 }
 
 // GetKind returns the type this step is of
@@ -39,15 +42,25 @@ func (watch *Watch) FromConfig(configYaml map[string]interface{}) error {
 	}
 
 	if preferencesYaml, ok := configYaml["Preferences"].(map[string]interface{}); ok {
+		// Read path preference
 		if path, ok := preferencesYaml["Path"].(string); ok {
 			watch.Path = path
 		} else {
 			return fmt.Errorf("preference \"Path\" (string) must be set for %s step", watch.GetKind())
 		}
+		// Read message preference
 		if message, ok := preferencesYaml["Message"].(string); ok {
 			watch.Message = message
 		} else {
 			return fmt.Errorf("preference \"Message\" (string) must be set for %s step", watch.GetKind())
+		}
+		fmt.Println(preferencesYaml)
+		// Read timeout preference
+		if timeout, ok := preferencesYaml["Timeout"].(int); ok {
+			watch.Timeout = timeout
+		} else {
+			// Default timeout is 300s
+			watch.Timeout = 300
 		}
 	} else {
 		return fmt.Errorf("preferences must be set for %s step", watch.GetKind())
@@ -58,26 +71,33 @@ func (watch *Watch) FromConfig(configYaml map[string]interface{}) error {
 
 // Execute starts the file watcher and terminates it if the defined string appeared or a timeout is reached.
 func (watch Watch) Execute() (result model.Result) {
-	fmt.Printf("Start watching \"%s\" for \"%s\"\n", watch.Path, watch.Message)
+	fmt.Printf("Start watching \"%s\" for \"%s\" (Timeout: %ds)\n", watch.Path, watch.Message, watch.Timeout)
 
 	// Setup the channel we listen for the result
-	done := make(chan error)
+	watcher := make(chan error)
 
-	// Tail the file
-	go tailFile(watch.Path, watch.Message, tail.Config{Follow: true}, done)
+	// Tail the file in a go routine
+	go tailFile(watch.Path, watch.Message, tail.Config{Follow: true}, watcher)
 
-	// Get the result of the channel
-	err := <-done
-
-	if err != nil {
-		fmt.Println("Message was not found")
+	// Check for the result or timeout if it takes to long
+	select {
+	case err := <-watcher:
+		if err != nil {
+			fmt.Println("Message was not found")
+			result.WasSuccessful = false
+			result.Message = err.Error()
+			return result
+		}
+	case <-time.After(time.Duration(watch.Timeout) * time.Second):
 		result.WasSuccessful = false
-		result.Message = err.Error()
+		result.Message = "Timeout waiting for message"
 		return result
 	}
 
-	fmt.Println("Message was found.")
+	// Close the channel
+	close(watcher)
 
+	fmt.Println("Message found")
 	result.WasSuccessful = true
 	result.Message = "Message found"
 	return result

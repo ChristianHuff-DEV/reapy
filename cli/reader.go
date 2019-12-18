@@ -233,6 +233,9 @@ func expandPreferences(preferences map[string]interface{}, variables map[string]
 				// Handle bool variables
 			} else if _, ok := value.(bool); ok {
 				expandedPreferences[key] = value
+				// Handle int variables
+			} else if _, ok := value.(int); ok {
+				expandedPreferences[key] = value
 			}
 		}
 	}
