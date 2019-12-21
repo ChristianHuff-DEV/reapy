@@ -1,10 +1,11 @@
 package cli
 
 import (
-	"fmt"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"time"
+
+	"github.com/AlecAivazis/survey/v2"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/briandowns/spinner"
@@ -16,22 +17,37 @@ var p *prompt.Prompt
 
 var baseSuggests = []prompt.Suggest{{Text: "help", Description: "Show available commands"}, {Text: "exit", Description: "Exit the application"}, {Text: "execute", Description: "Choose a plan to execute"}, {Text: "reload", Description: "Reload plans from config"}}
 
-var baseFunctions = map[string]func(){"help": funcHelp, "exit": funcExit, "reload": funcReload}
+var baseFunctions = map[string]func(){"help": help, "exit": exit, "reload": reload}
 
-var funcHelp = func() {
+func help() {
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
 	s.Start()
 	time.Sleep(4 * time.Second)
 	s.Stop()
 }
 
-var funcExit = func() {
+func exit() {
 	os.Exit(0)
 }
 
-var funcReload = func() {
-	fmt.Println("funcReload")
-	InitializePlans()
+// reloadPlans reads all plans again und update the suggestions of the prompt.
+//
+// If reading the plans returns an error the user can choose to retry it or exit the programm. If the user chooses to retry this method is called recursively.
+func reload() {
+	err := InitializePlans()
+	if err != nil {
+		response := true
+		prompt := &survey.Confirm{
+			Default: true,
+			Message: "Retry?",
+		}
+		survey.AskOne(prompt, &response)
+		if response {
+			reload()
+		} else {
+			os.Exit(0)
+		}
+	}
 }
 
 // Start creates the prompt instance and runs it
@@ -47,7 +63,6 @@ func InitializePlans() (err error) {
 	Config, err = readPlanDefinition()
 	if err != nil {
 		color.Red.Printf("Error reading plans definition file: %s\n", err)
-		log.Fatal(err)
 		return err
 	}
 	return nil
