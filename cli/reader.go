@@ -210,6 +210,13 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 					return steps, err
 				}
 				steps = append(steps, &step)
+			case step.KindCopy:
+				step := stepDefinition.Copy{}
+				err = step.FromConfig(stepYaml)
+				if err != nil {
+					return steps, err
+				}
+				steps = append(steps, &step)
 			default:
 				return steps, fmt.Errorf("Unknown step type \"%s\" used", kind)
 			}
