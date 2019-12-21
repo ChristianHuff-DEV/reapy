@@ -196,8 +196,8 @@ func parseSteps(stepsYaml []interface{}, variables map[string]string) (steps []m
 					return steps, err
 				}
 				steps = append(steps, &step)
-			case step.KindCopy:
-				step := stepDefinition.Copy{}
+			case step.KindCopyFile:
+				step := stepDefinition.CopyFile{}
 				err = step.FromConfig(stepYaml)
 				if err != nil {
 					return steps, err

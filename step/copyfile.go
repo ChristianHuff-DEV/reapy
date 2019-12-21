@@ -13,6 +13,8 @@ import (
 const KindCopyFile = "CopyFile"
 
 // CopyFile takes a file and copies it from one location to another
+//
+// If the destination file already exists it will be overwritten with the source file.
 type CopyFile struct {
 	model.RunnableStep
 	// Source is the path to the file to copy it from
