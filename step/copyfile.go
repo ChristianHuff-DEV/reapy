@@ -60,9 +60,9 @@ func (copyFile *CopyFile) FromConfig(stepConfig map[string]interface{}) error {
 	return nil
 }
 
-// Execute copies a file/folder from one location to another
+// Execute copies a file from one location to another
 func (copyFile CopyFile) Execute() (result model.Result) {
-	m := fmt.Sprintf("CopyFile %s to %s", copyFile.Source, copyFile.Destination)
+	m := fmt.Sprintf("Copy file from %s to %s", copyFile.Source, copyFile.Destination)
 	fmt.Println(m)
 	log.Print(m)
 
