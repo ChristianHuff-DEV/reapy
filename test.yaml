@@ -7,16 +7,11 @@ Plans:
     Tasks:
     - Name: Test
       Steps:
-      # - Kind: Service
-      #   Description: "Start the Tomcat service"
-      #   Preferences:
-      #     Name: "Tomcat8"
-      #     Action: start
-      - Kind: Watch
-        Description: "Watch the Tomcat log to check if is started"
+      - Kind: CopyFolder
+        Description: Copy a file from a to b
         Preferences:
-          Path: "${workdir}\\apache-tomcat-${tomcat_version}\\logs\\catalina.${date}.log"
-          Message: "message"
+          Source: ${workdir}\\from
+          Destination: ${workdir}\\to
   - Name: Start Tomcat service
     Tasks:
     - Name: Start Tomcat service
@@ -26,12 +21,11 @@ Plans:
         Preferences:
           Name: "Tomcat8"
           Action: start
-      - Kind: Checklist
-        Description: "Ensure Tomcat is running"
+      - Kind: Watch
+        Description: "Watch the Tomcat log to check if is started"
         Preferences:
-          Message: "Perform the following tasks:"
-          Items:
-            - "Check the services window that the Tomcat service is running"
+          Path: "${workdir}\\apache-tomcat-${tomcat_version}\\logs\\catalina.${date}.log"
+          Message: "message"
   - Name: Stop Tomcat service
     Tasks:
     - Name: Stop Tomcat service
