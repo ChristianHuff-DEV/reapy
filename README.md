@@ -1,4 +1,4 @@
-# reapy
+
 
 Achieve complex tasks by breaking them down in small steps and guiding the user through it step by step.
 
@@ -196,10 +196,106 @@ Example:
 
 ### Delete
 
+This step is used to delete a file/folder.
+
+Preferences:
+
+* `Path` (string / required)  
+The path of the file/folder to delete.
+
+```yaml
+- Kind: Delete
+  Description: Delete the temp folder
+  Preferences:
+    Path: "C:\\Users\\christian\\temp"
+```
+
 ### Download
+
+This step is used to download a file from using *http*.
+
+Preferences:
+
+* `URL` (string / required)  
+The URL from where to download the file
+* `Path` (string / required)  
+The path to the **folder** the file is downloaded to. (**Must** exist.)
+
+Example: 
+
+```yaml
+- Kind: Download
+  Description: Download Tomcat
+  Preferences:
+    URL: "https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.30/bin/apache-tomcat-9.0.30-windows-x64.zip"
+    Path: "C:\\Users\\christian\\temp"
+```
 
 ### Service
 
+This step type is used to start/stop a service.
+
+**Currently only supported under Windows.**
+
+Preferences:
+
+* `Name` (string / required)  
+Name of the service. Has to be the *service name* not the *display name*.
+* `Action` (string / required / Possible values: *start/stop*)  
+Whether the service should be started or stopped.
+
+Example:
+
+```yaml
+- Kind: Service
+  Description: "Start the Tomcat service"
+  Preferences:
+    Name: "Tomcat8"
+    Action: start
+```
+
 ### Unzip
 
+This step type is used to extract a `zip` archive.
+
+Preferences:
+
+* `Source` (string / required)  
+Path to the `zip` file to be extraced.
+* `Destination` (string / required)  
+Path to the folder content of the archive is placed in. (A folder with the same name as the archive file is created inside of this path.)
+
+Example:
+
+```yaml
+- Kind: Unzip
+  Description: Unzip Tomcat release
+  Preferences:
+    Source: "C:\\Users\\christian\\temp\\apache-tomcat-9.0.30-windows-x64.zip"
+    Destination: "C:\\Users\\christian\\temp"
+```
+
 ### Watch
+
+This tep is used to watch a file searching for a a defined string. (Works a little like `tail -f`.)
+
+If the message is already present in the file when this step starts it will finish immediately. Otherwise the file will be watched until the message is shows up in the file or the timeout is reached.
+
+Preferences:
+
+* `Path` (string / required)  
+The path  to the file to be watched.
+* `Message` (string / required)  
+The message the step is looking for.
+* `Timeout` (int / optional / default: *300*)  
+Number of seconds the file is watched for before the step is aborted.
+
+Example:
+
+```yaml
+- Kind: Watch
+  Description: "Watch the Tomcat log to check if is started"
+  Preferences:
+    Path: "C:\\Users\\christian\\temp\\apache-tomcat\\logs\\catalina.2019-12-20.log"
+    Message: "Tomcat started"
+```
