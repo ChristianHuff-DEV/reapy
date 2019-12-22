@@ -85,3 +85,121 @@ To build the project execute:
 go generate
 go build
 ```
+
+## Documentation
+
+### Step types
+
+The following gives an overview of all step types and how to use them.
+
+### Checklist
+
+This step is used to present the user with a checklist. It can be used to give step by step instructions. All items of the checklist have to be ticked in order to continue with the execution of the plan.
+
+![checklist-example](./docs/checklist-example.png)
+
+Parameter:
+
+* `Message` (string / optional)  
+Optional message that is displayed as the header of the checklist.
+* `Items` (string array / required)  
+The individual items of the checklist. They will be displayed in the same order they are defined in.
+
+Example:
+
+```yaml
+- Kind: Checklist
+  Description: Show step by step instructions to put your shoes on
+  Preferences:
+    Message: Put your shoes on
+    Items:
+    - Put on the left shoe
+    - Tie the laces of the left shoe
+    - Put on the right shoe
+    - Tie the laces of the right shoe
+```
+
+### Command
+
+This step type is used to run generic commands.
+
+Parameter:
+
+* `Command` (string / required)  
+The command to be executed.
+* `Path` (string / optional)  
+The path the command is executed in.
+* `Args` (string array / optional)  
+Used to pass additional arguments. Each argument needs to be it's own item in this array.
+* `Silent` (bool / optional / default: *false*)  
+Whether or not the output of the command is printed to the console. The output will always be written to the log file.
+
+Example:
+
+Execute the `service.bat` file used to install the Tomcat service.
+
+```yaml
+- Kind: Command
+  Description: Execute the command installing Tomcat as a Windows service
+  Preferences:
+    Command: "cmd.exe"
+    Path: "C:\\Users\\christian\\apache-tomcat\\bin"
+    Args:
+      - "/C"
+      - "service.bat install"
+```
+
+### Copy
+
+This step type is used to copy a file/folder. Depending on the *source* path the step determines if a file or folder has to be copied.
+
+If a file is copied the *destination* path has to include the file name. If the file already exists it will be overwritten.
+
+If a folder is to be copied and the target folder already exists all files and folders of the *source* path are merged into the *destination* path. Existing files will be overwritten.
+
+If the target folder (or any of it's parents) doesn't exist it will be created.
+
+Preferences:
+
+* `Source` (string / required)  
+From where to copy the file/folder
+* `Destination` (string / required)  
+Where to copy the file/folder to
+
+Example:
+
+```yaml
+- Kind: Copy
+  Description: Copy help.txt from A to B
+  Preferences:
+    Source: "C:\\Users\\christian\\from"
+    Destination: "C:\\Users\\christian\\to"
+```
+
+### CreateFolder
+
+This step is used to create a folder. If the parent folder(s) is/are missing the command will fail.
+
+Preferences:
+
+* `Path` (string / required)  
+The path of the folder to be created.
+
+Example:
+
+```yaml
+- Kind: CreateFolder
+  Description: Create a temp dir
+  Preferences:
+    Path: "C:\\Users\\christian\\temp"
+```
+
+### Delete
+
+### Download
+
+### Service
+
+### Unzip
+
+### Watch
