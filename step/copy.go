@@ -112,11 +112,11 @@ func dir(src string, dst string) error {
 		destinationPath := path.Join(dst, fileInSourceFolder.Name())
 
 		if fileInSourceFolder.IsDir() {
-			if err = Dir(sourcePath, destinationPath); err != nil {
+			if err = dir(sourcePath, destinationPath); err != nil {
 				fmt.Println(err)
 			}
 		} else {
-			if err = File(sourcePath, destinationPath); err != nil {
+			if err = file(sourcePath, destinationPath); err != nil {
 				fmt.Println(err)
 			}
 		}

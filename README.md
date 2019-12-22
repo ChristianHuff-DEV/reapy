@@ -37,7 +37,7 @@ The following gives an overview of the bare minimum that needs to work in order 
 #### Steps
 
 * [x] Unzip file
-* [ ] Copy file/folder
+* [x] Copy file/folder
 * [x] Create folder
 * [x] Delete file/folder
 * [ ] Replace/Add strings to file  
@@ -49,7 +49,7 @@ This should work interactively (ask the user what to fill in)
 * [ ] Define which steps to repeat if a check was unsuccessfull
   * [ ] Validate that repeating the defined steps results in the same check that was unsuccessfull
 * [ ] Read a file and check it for the occurens of string (i.e. errors in a log file)
-* [ ] Wait for something (i.e. wait for the occurens of a specific string in a log file / wait for a service to start / when deleting the a `.war` file in the *webapps* folder of Tomcat, wait that the deployed distribution was delted)
+* [x] Wait for something (i.e. wait for the occurens of a specific string in a log file / wait for a service to start / when deleting the a `.war` file in the *webapps* folder of Tomcat, wait that the deployed distribution was delted)
 * [x] Download file
 * [x] execute generic command
 
