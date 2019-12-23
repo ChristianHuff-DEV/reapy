@@ -22,7 +22,7 @@ To break the process down we distinguish the following building blocks:
 The overaching goal we want to achieve. (i.e. installing a piece of software). Each plan consists out of one ore more tasks.
 * Task  
 Each plan consists out of multiple tasks. A task could be the update of a database and checking that the update was successful. Each task therefore consists out of one or more steps.
-* Step
+* Step  
 A small piece of work contributing to the fulfillment of a task or a check to ensure that a previous step was executed successfull. (i.e. unzipping a file or copying a folder from one place to another) (i.e. having the user manually confirm something or checking that a log file contains no errors)
 
 ### MVP
@@ -57,7 +57,7 @@ This should work interactively (ask the user what to fill in)
 
 Thinks outside of the scope of the MVP that would add value.
 
-* [ ] Allow for hot-reloading of the plan definition
+* [x] Allow for hot-reloading of the plan definition
 * [ ] Execute SQL against database to check the result (Check)
 
 ## Libraries
@@ -212,12 +212,12 @@ The path of the file/folder to delete.
 
 ### Download
 
-This step is used to download a file from using *http*.
+This step is used to download a file through *http*.
 
 Preferences:
 
 * `URL` (string / required)  
-The URL from where to download the file
+The URL from where to download the file.
 * `Path` (string / required)  
 The path to the **folder** the file is downloaded to. (**Must** exist.)
 
@@ -263,7 +263,7 @@ Preferences:
 * `Source` (string / required)  
 Path to the `zip` file to be extraced.
 * `Destination` (string / required)  
-Path to the folder content of the archive is placed in. (A folder with the same name as the archive file is created inside of this path.)
+Path to the folder the content of the archive is placed in. (A folder with the same name as the *zip* file is created inside of this path.)
 
 Example:
 
@@ -277,9 +277,9 @@ Example:
 
 ### Watch
 
-This tep is used to watch a file searching for a a defined string. (Works a little like `tail -f`.)
+This step is used to watch a file searching for a defined string. (Think of `tail -f | grep`)
 
-If the message is already present in the file when this step starts it will finish immediately. Otherwise the file will be watched until the message is shows up in the file or the timeout is reached.
+If the message is already present in the file when this step starts it will finish immediately. Otherwise the file will be watched until the message shows up in the file or the timeout is reached.
 
 Preferences:
 
@@ -288,7 +288,7 @@ The path  to the file to be watched.
 * `Message` (string / required)  
 The message the step is looking for.
 * `Timeout` (int / optional / default: *300*)  
-Number of seconds the file is watched for before the step is aborted.
+Number of seconds the file is watched, before the step is aborted.
 
 Example:
 
