@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -70,10 +72,40 @@ func InitializePlans() (err error) {
 
 // readPlanDefinition parses a given config yaml file into the config instance
 func readPlanDefinition() (config model.Config, err error) {
+	findPlanDefinitionFiles()
 	log.Println("reading plans configuration file")
 	config, err = Extract("test.yaml")
 	if err != nil {
 		return config, err
 	}
 	return config, nil
+}
+
+func findPlanDefinitionFiles() (files []string, err error) {
+	// Get the current directory
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+		return files, err
+	}
+	fmt.Printf("Current directory: %s\f", dir)
+
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		// Skip folders
+		if info.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(path) != ".yaml" {
+			return nil
+		}
+		fmt.Println(filepath.Ext(path))
+
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return files, nil
 }
