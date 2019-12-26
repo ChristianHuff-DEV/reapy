@@ -119,9 +119,9 @@ func findConfigFiles() (files []string, err error) {
 
 	// "Walk" over all files (including content of subfolders) in the search for yaml files
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		// Skip folders
-		if info.IsDir() {
-			return nil
+		// Skip all folders except the execution path
+		if path != dir && info.IsDir() {
+			return filepath.SkipDir
 		}
 
 		if filepath.Ext(path) != ".yaml" {

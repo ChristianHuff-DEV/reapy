@@ -3,3 +3,4 @@
 *.log
 /ignore
 reapy
+__debug_bin
