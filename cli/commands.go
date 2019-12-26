@@ -72,24 +72,52 @@ func InitializePlans() (err error) {
 
 // readPlanDefinition parses a given config yaml file into the config instance
 func readPlanDefinition() (config model.Config, err error) {
-	findPlanDefinitionFiles()
-	log.Println("reading plans configuration file")
-	config, err = Extract("test.yaml")
+	// Get all yaml files from the execution directory. ()
+	files, err := findConfigFiles()
 	if err != nil {
 		return config, err
 	}
+
+	log.Println("reading plans from %d config files", len(files))
+
+	var plans = make(map[string]model.Plan)
+
+	for _, file := range files {
+		plansOfFile, err := ExtractPlans(file)
+		if err != nil {
+			return config, err
+		}
+		for name, plan := range plansOfFile {
+			// Check if a plan with this name already exists
+			if _, ok := plans[name]; ok {
+				return config, fmt.Errorf("the plan with the name \"%s\" has been declared more than once", name)
+			}
+			// Add plan
+			plans[name] = plan
+		}
+	}
+
+	config.Plans = plans
+
+	log.Printf("Found %d plans", len(config.Plans))
+
 	return config, nil
 }
 
-func findPlanDefinitionFiles() (files []string, err error) {
+// findConfigFiles searches for all yaml files in the path the command is executed from.
+//
+// TODO: It can currently not determine if a file is meant to be for this app or is placed there in another context.
+func findConfigFiles() (files []string, err error) {
+	log.Println("Start searching for config files in execution path")
 	// Get the current directory
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 		return files, err
 	}
-	fmt.Printf("Current directory: %s\f", dir)
+	log.Printf("Execution path: %s", dir)
 
+	// "Walk" over all files (including content of subfolders) in the search for yaml files
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		// Skip folders
 		if info.IsDir() {
@@ -99,13 +127,16 @@ func findPlanDefinitionFiles() (files []string, err error) {
 		if filepath.Ext(path) != ".yaml" {
 			return nil
 		}
-		fmt.Println(filepath.Ext(path))
+		files = append(files, path)
 
 		return nil
 	})
+
 	if err != nil {
-		panic(err)
+		return files, err
 	}
+
+	log.Printf("Found %d file(s)\n", len(files))
 
 	return files, nil
 }

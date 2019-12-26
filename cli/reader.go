@@ -13,8 +13,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Extract takes the location of the yaml file and delegats it's content to the method reading the content and creating the config.
-func Extract(filePath string) (config model.Config, err error) {
+// ExtractPlans takes the location of the yaml file and delegats it's content to the method reading the content and extracting the plans.
+func ExtractPlans(filePath string) (plans map[string]model.Plan, err error) {
 	log.Printf("read config from %s", filePath)
 
 	configYaml, err := ioutil.ReadFile(filePath)
@@ -28,35 +28,36 @@ func Extract(filePath string) (config model.Config, err error) {
 		log.Panicf("Unable to read plan definition: %s", err)
 	}
 
-	config, err = parseConfig(configMap)
+	plans, err = parseConfig(configMap, filePath)
 	if err != nil {
-		return config, err
+		return plans, err
 	}
 
-	return config, nil
+	return plans, nil
 }
 
-// parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables and plans
-func parseConfig(configYaml map[string]interface{}) (config model.Config, err error) {
+// parseConfig takes a map representing the yaml config file content and delegates it to the methods extracting the variables which are then used to extract and populate the  plans
+func parseConfig(configYaml map[string]interface{}, path string) (plans map[string]model.Plan, err error) {
 
+	var variables map[string]string
 	if variablesYaml, ok := configYaml["Variables"].(map[string]interface{}); ok {
 		err = validateVariables(variablesYaml)
 		if err != nil {
-			return config, err
+			return plans, err
 		}
-		config.Variables = parseVariables(variablesYaml)
+		variables = parseVariables(variablesYaml)
 	}
 
 	if plansYaml, ok := configYaml["Plans"].([]interface{}); ok {
-		config.Plans, err = parsePlans(plansYaml, config.Variables)
+		plans, err = parsePlans(plansYaml, variables)
 		if err != nil {
-			return config, err
+			return plans, err
 		}
 	} else {
-		return config, fmt.Errorf("no plans defined")
+		return plans, fmt.Errorf("no plans defined in %s", path)
 	}
 
-	return config, nil
+	return plans, nil
 }
 
 // parseVariables extracts the first section of the yaml file that defines the variables which might be used in the later definition of tasks/steps
