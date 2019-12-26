@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"sort"
 	"strings"
 
@@ -62,24 +63,39 @@ func executePlan(plan model.Plan) {
 out:
 	for _, task := range plan.Tasks {
 		for _, step := range task.Steps {
-			result := step.Execute()
-			// Handle a step failing
-			if !result.WasSuccessful {
-				color.Red.Println(result.Message)
-				response := "Abort, Continue or Retry?"
-				prompt := &survey.Select{
-					Message: "",
-					Options: []string{"Abort", "Continue"},
-				}
-				survey.AskOne(prompt, &response)
-				switch response {
-				case "Abort":
-					// Break out of th nested loop
-					break out
-				case "Continue":
-					// Do nothing. Just continue with the execution.
-				}
+			continueExecution := executeStep(step)
+			if !continueExecution {
+				break out
 			}
 		}
+	}
+}
+
+// executeStep executes the given step. The returned boolean is to determine if the overall execution of the plan should be aborted or continued
+func executeStep(step model.Step) bool {
+	result := step.Execute()
+	// Handle a step failing
+	if !result.WasSuccessful {
+		color.Red.Println(result.Message)
+		response := "Abort, Continue or Retry?"
+		prompt := &survey.Select{
+			Message: "",
+			Options: []string{"Retry", "Continue", "Abort"},
+		}
+		survey.AskOne(prompt, &response)
+		switch response {
+		case "Abort":
+			return false
+		case "Continue":
+			return true
+			// Recursively call this method again to try executing it again
+		case "Retry":
+			return executeStep(step)
+		default:
+			log.Printf("Unknown command \"%s\" used after step failed", response)
+			return false
+		}
+	} else {
+		return true
 	}
 }
