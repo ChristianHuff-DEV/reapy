@@ -18,7 +18,7 @@ import (
 
 var p *prompt.Prompt
 
-var baseSuggests = []prompt.Suggest{{Text: "help", Description: "Show available commands"}, {Text: "exit", Description: "Exit the application"}, {Text: "execute", Description: "Choose a plan to execute"}, {Text: "reload", Description: "Reload plans from config"}}
+var baseSuggests = []prompt.Suggest{{Text: "help", Description: "Show available commands"}, {Text: "exit", Description: "Exit the application"}, {Text: "run", Description: "Choose a plan to execute"}, {Text: "reload", Description: "Reload plans from config"}}
 
 var baseFunctions = map[string]func(){"help": help, "exit": exit, "reload": reload}
 

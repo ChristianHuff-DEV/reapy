@@ -22,7 +22,7 @@ var Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
 	text := document.Text
 
 	// If the command is "execute " show the available plans
-	if strings.HasPrefix(text, "execute ") {
+	if strings.HasPrefix(text, "run ") {
 		for _, plan := range Config.Plans {
 			suggests = append(suggests, prompt.Suggest{Text: plan.Name, Description: plan.Description})
 			sort.Slice(suggests, func(i, j int) bool {
@@ -40,9 +40,9 @@ var Completer = func(document prompt.Document) (suggests []prompt.Suggest) {
 var Executor = func(command string) {
 
 	// Does the user want to execute a plan?
-	if strings.HasPrefix(command, "execute ") {
+	if strings.HasPrefix(command, "run ") {
 		// Extrace the name of the plan
-		planName := command[len("execute "):]
+		planName := command[len("run "):]
 		if plan, ok := Config.Plans[planName]; ok {
 			executePlan(plan)
 			return
