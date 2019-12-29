@@ -7,7 +7,7 @@ Plans:
     Tasks:
     - Name: Test
       Steps:
-      - Kind: CopyFolder
+      - Kind: Copy
         Description: Copy a file from a to b
         Preferences:
           Source: ${workdir}\\from
@@ -16,25 +16,11 @@ Plans:
     Tasks:
     - Name: Start Tomcat service
       Steps:
-      - Kind: Service
-        Description: "Start the Tomcat service"
-        Preferences:
-          Name: "Tomcat8"
-          Action: start
       - Kind: Watch
         Description: "Watch the Tomcat log to check if is started"
         Preferences:
           Path: "${workdir}\\apache-tomcat-${tomcat_version}\\logs\\catalina.${date}.log"
           Message: "message"
-  - Name: Stop Tomcat service
-    Tasks:
-    - Name: Stop Tomcat service
-      Steps:
-      - Kind: Service
-        Description: "Stop the Tomcat service"
-        Preferences:
-          Name: "Tomcat8"
-          Action: stop
   - Name: Uninstall Tomcat
     Tasks:
     - Name: Uninstall Tomcat service

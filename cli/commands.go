@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -124,7 +125,7 @@ func findConfigFiles() (files []string, err error) {
 			return filepath.SkipDir
 		}
 
-		if filepath.Ext(path) != ".yaml" {
+		if (filepath.Ext(path) != ".yaml" && filepath.Ext(path) != ".yml") || !strings.HasPrefix(info.Name(), "reapy") {
 			return nil
 		}
 		files = append(files, path)
