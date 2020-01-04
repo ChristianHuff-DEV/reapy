@@ -45,7 +45,10 @@ func parseConfig(configYaml map[string]interface{}, path string) (plans map[stri
 		if err != nil {
 			return plans, err
 		}
-		variables = parseVariables(variablesYaml)
+		variables, err = parseVariables(variablesYaml)
+		if err != nil {
+			return plans, err
+		}
 	}
 
 	if plansYaml, ok := configYaml["Plans"].([]interface{}); ok {
@@ -61,15 +64,21 @@ func parseConfig(configYaml map[string]interface{}, path string) (plans map[stri
 }
 
 // parseVariables extracts the first section of the yaml file that defines the variables which might be used in the later definition of tasks/steps
-func parseVariables(variablesYaml map[string]interface{}) (variables map[string]string) {
+func parseVariables(variablesYaml map[string]interface{}) (variables map[string]string, err error) {
 	variables = make(map[string]string)
 
 	// Iterate all variables
 	for key, value := range variablesYaml {
-		variables[key] = value.(string)
+
+		expandedVariable, err := expandVariable(value.(string), variables)
+		if err != nil {
+			return variables, err
+		}
+
+		variables[key] = expandedVariable
 	}
 
-	return variables
+	return variables, nil
 }
 
 // parsePlans creates the struct representation of the plans section in the yaml file.
