@@ -2,10 +2,13 @@ package cli
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
+	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ChristianHuff-DEV/reapy/model"
 	"github.com/ChristianHuff-DEV/reapy/step"
@@ -65,7 +68,10 @@ func parseConfig(configYaml map[string]interface{}, path string) (plans map[stri
 
 // parseVariables extracts the first section of the yaml file that defines the variables which might be used in the later definition of tasks/steps
 func parseVariables(variablesYaml map[string]interface{}) (variables map[string]string, err error) {
-	variables = make(map[string]string)
+	variables, err = getDefaultVariables()
+	if err != nil {
+		return variables, err
+	}
 
 	// Iterate all variables
 	for key, value := range variablesYaml {
@@ -79,6 +85,22 @@ func parseVariables(variablesYaml map[string]interface{}) (variables map[string]
 	}
 
 	return variables, nil
+}
+
+// getDefaultVariables define variables that are always available but can be overwritten in the config file.
+func getDefaultVariables() (defaultVariables map[string]string, err error) {
+	defaultVariables = make(map[string]string)
+
+	dir, err := os.Getwd()
+	if err != nil {
+		return defaultVariables, err
+	}
+	defaultVariables["workdir"] = dir
+
+	defaultVariables["date"] = time.Now().Format("2006-01-02")
+	defaultVariables["date_time"] = time.Now().Format("2006-01-02_15:04:05")
+
+	return defaultVariables, nil
 }
 
 // parsePlans creates the struct representation of the plans section in the yaml file.
