@@ -98,7 +98,6 @@ func getDefaultVariables() (defaultVariables map[string]string, err error) {
 	defaultVariables["workdir"] = dir
 
 	defaultVariables["date"] = time.Now().Format("2006-01-02")
-	defaultVariables["date_time"] = time.Now().Format("2006-01-02_15:04:05")
 
 	return defaultVariables, nil
 }
