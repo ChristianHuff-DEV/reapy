@@ -46,8 +46,7 @@ func (createFolder CreateFolder) Execute() model.Result {
 
 // Create makes a new folder at the given path
 func create(path string) (result model.Result) {
-	//Attempt to create the directory and ignore any issues
-	err := os.Mkdir(path, os.ModePerm)
+	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
 		result.WasSuccessful = false
 		result.Message = err.Error()
