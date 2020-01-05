@@ -48,7 +48,12 @@ func (delete Delete) Execute() model.Result {
 // delete removes the file/folder at the given path
 func deletePath(path string) (result model.Result) {
 	f, err := os.Stat(path)
-	if err != nil {
+	// If the file/folder does not exist there is nothing to delete
+	if err != nil && os.IsNotExist(err) {
+		result.WasSuccessful = true
+		result.Message = path + " deleted"
+		return result
+	} else if err != nil {
 		result.WasSuccessful = false
 		result.Message = err.Error()
 		return result
@@ -56,6 +61,7 @@ func deletePath(path string) (result model.Result) {
 
 	if f.IsDir() {
 		err := os.RemoveAll(path)
+		// The execution only failed if the error is not due to the fact that the folder does not exist
 		if err != nil {
 			result.WasSuccessful = false
 			result.Message = err.Error()
