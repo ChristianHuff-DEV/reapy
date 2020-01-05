@@ -88,11 +88,41 @@ go build
 
 ## Documentation
 
+### Variables
+
+Variables can be defined at the top of a config file and used in the preferences of the steps.
+
+The following example defines a variables called `install_path` and uses it in a step  to create the folders for this path.
+
+```yaml
+Variables:
+  install_path : "C:\\Users\\christian\\git\\github.com\\ChristianHuff-DEV\\reapy\\install"
+Plans:
+  - Name: Test
+    Tasks:
+    - Name: Test
+      Steps:
+      - Kind: CreateFolder
+        Preferences:
+          Path: "${install_path}"
+```
+
+### Default Variables
+
+The following is a list of variables that are available by default an whose values are determined on the start of the app.
+
+These variables can be overwritten by defining them in the `Variables` section of the config file.
+
+* `workdir`  
+The folder the app is started in.
+* `date`  
+The current date in the format "2006-01-02"
+
 ### Step types
 
 The following gives an overview of all step types and how to use them.
 
-### Checklist
+#### Checklist
 
 This step is used to present the user with a checklist. It can be used to give step by step instructions. All items of the checklist have to be ticked in order to continue with the execution of the plan.
 
@@ -119,7 +149,7 @@ Example:
     - Tie the laces of the right shoe
 ```
 
-### Command
+#### Command
 
 This step type is used to run generic commands.
 
@@ -149,7 +179,7 @@ Execute the `service.bat` file used to install the Tomcat service.
       - "service.bat install"
 ```
 
-### Copy
+#### Copy
 
 This step type is used to copy a file/folder. Depending on the *source* path the step determines if a file or folder has to be copied.
 
@@ -176,7 +206,7 @@ Example:
     Destination: "C:\\Users\\christian\\to"
 ```
 
-### CreateFolder
+#### CreateFolder
 
 This step is used to create a folder. If the parent folder(s) is/are missing the command will fail.
 
@@ -194,7 +224,7 @@ Example:
     Path: "C:\\Users\\christian\\temp"
 ```
 
-### Delete
+#### Delete
 
 This step is used to delete a file/folder.
 
@@ -210,7 +240,7 @@ The path of the file/folder to delete.
     Path: "C:\\Users\\christian\\temp"
 ```
 
-### Download
+#### Download
 
 This step is used to download a file through *http*.
 
@@ -231,7 +261,7 @@ Example:
     Path: "C:\\Users\\christian\\temp"
 ```
 
-### Service
+#### Service
 
 This step type is used to start/stop a service.
 
@@ -254,7 +284,7 @@ Example:
     Action: start
 ```
 
-### Unzip
+#### Unzip
 
 This step type is used to extract a `zip` archive.
 
@@ -275,7 +305,7 @@ Example:
     Destination: "C:\\Users\\christian\\temp"
 ```
 
-### Watch
+#### Watch
 
 This step is used to watch a file searching for a defined string. (Think of `tail -f | grep`)
 
