@@ -119,17 +119,28 @@ func startService(serviceName string) error {
 	if err != nil {
 		return err
 	}
+
 	// Check that the service actually started and keeps running
 	spinner := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 
 	spinner.Start()
-	// To start a servie for now we use a fixed timeout. This is due to the fact that the service
-	// might start but than quickly fail. Therefore only after the sleep we check that the service
-	// is actually running.
-	time.Sleep(2 * time.Minute)
 	status, err := s.Query()
 	if err != nil {
 		return err
+	}
+
+	timeout := time.Now().Add(120 * time.Second)
+	for status.State != svc.Running {
+		if timeout.Before(time.Now()) {
+			spinner.Stop()
+			return err
+		}
+		time.Sleep(5 * time.Second)
+		status, err = s.Query()
+		if err != nil {
+			spinner.Stop()
+			return err
+		}
 	}
 
 	// Check that the service is running
