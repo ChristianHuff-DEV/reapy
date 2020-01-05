@@ -2,5 +2,6 @@
 *.exe
 *.log
 /ignore
+/example
 reapy
 __debug_bin

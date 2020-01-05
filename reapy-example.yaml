@@ -1,0 +1,65 @@
+Variables:
+  tomcat_version: "8.5.50"
+  install_path : "${workdir}\\example\\tomcat-${tomcat_version}"
+Plans:
+  - Name: Install Tomcat
+    Description: Install Tomcat as a Windows service
+    Tasks:
+    - Name: Download Tomcat and install it as a Windows service
+      Steps:
+      - Kind: Delete
+        Description: Delete Tomcat installation folder if it exists
+        Preferences:
+          Path: ${install_path}
+      - Kind: CreateFolder
+        Description: Create the installation folder
+        Preferences:
+          Path: ${install_path}
+      - Kind: Download
+        Description: Download Tomcat
+        Preferences:
+          URL: https://www-us.apache.org/dist/tomcat/tomcat-8/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip
+          Path: ${install_path}
+      - Kind: Unzip
+        Description: Unzip the release .zip file
+        Preferences:
+          Source: "${install_path}\\apache-tomcat-${tomcat_version}-windows-x64.zip"
+          Destination: ${install_path}
+      - Kind: Command
+        Description: Install Tomcat as a service
+        Preferences:
+          Command: "cmd.exe"
+          Path: "${install_path}\\apache-tomcat-${tomcat_version}\\bin"
+          Args:
+            - "/C"
+            - "service.bat install"
+      - Kind: Checklist
+        Description: Set correct account for running the service
+        Preferences:
+          Items:
+          - Open the Windows services
+          - Find "Apache Tomcat 8.5 service"
+          - Right click the service an click "Properties"
+          - Under the "Log On" tab choose "Local System account"
+          - Click "Apply" and close the window
+      - Kind: Service
+        Description: Start Tomcat service
+        Preferences:
+          Name: Tomcat8
+          Action: start
+  - Name: Uninstall Tomcat
+    Tasks:
+    - Name: Uninstall Tomcat service
+      Steps: 
+      - Kind: Service
+        Description: Stop Tomcat service
+        Preferences:
+          Name: Tomcat8
+          Action: stop
+      - Kind: Command
+        Description: Execute the command uninstalling Tomcat as a Windows service
+        Preferences:
+          Command: "./tomcat8.exe"
+          Path: "${install_path}\\apache-tomcat-${tomcat_version}\\bin"
+          Args:
+            - "//DS//Tomcat8"
