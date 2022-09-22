@@ -2,7 +2,7 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: go get
+  - init: go mod download
 
 vscode:
   extensions:

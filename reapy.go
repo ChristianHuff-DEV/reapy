@@ -1,4 +1,3 @@
-//go:generate goversioninfo -icon=icon.ico -manifest=goversioninfo.exe.manifest
 package main
 
 import (
@@ -6,7 +5,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/ChristianHuff-DEV/reapy/cli"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
@@ -17,12 +15,6 @@ func main() {
 	}
 	defer file.Close()
 
-	err = cli.InitializePlans()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	cli.Start()
 }
 
 func setupLogging() (*os.File, error) {
