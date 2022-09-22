@@ -1,0 +1,12 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: go get
+
+vscode:
+  extensions:
+    # Syntax highlighting von .env files
+    - mikestead.dotenv
+    # Go support
+    - golang.go
